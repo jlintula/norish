@@ -13,14 +13,21 @@
 
 **Spec:** `.scratch/realtime-foundation/spec.md` § Connection lifecycle
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] `packages/trpc/__tests__/ws-server.test.ts` drives `server.emit("upgrade", req, socket, head)` with a fake socket and a spied `getVerifiedSession`: exactly one verification per connection
-- [ ] Origin cases in that test: mismatched → `403` and destroyed; matches `AUTH_URL` → accepted; matches a `TRUSTED_ORIGINS` entry → accepted; matches the host → accepted; absent → accepted
-- [ ] Unauthenticated → handshake completes, then close `4401`
-- [ ] `stopTrpcWebSocket` sends `1012` to every open socket and resolves; `shutdown.ts` awaits it right after HTTP close and the `server.on("close")` handler is gone
-- [ ] `ws.on("close")` cannot reject
-- [ ] `Context` has no `operationId` on the WS path; the HTTP path is unchanged
-- [ ] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
+- [x] `packages/trpc/__tests__/ws-server.test.ts` drives `server.emit("upgrade", req, socket, head)` with a fake socket and a spied `getVerifiedSession`: exactly one verification per connection
+- [x] Origin cases in that test: mismatched → `403` and destroyed; matches `AUTH_URL` → accepted; matches a `TRUSTED_ORIGINS` entry → accepted; matches the host → accepted; absent → accepted
+- [x] Unauthenticated → handshake completes, then close `4401`
+- [x] `stopTrpcWebSocket` sends `1012` to every open socket and resolves; `shutdown.ts` awaits it right after HTTP close and the `server.on("close")` handler is gone
+- [x] `ws.on("close")` cannot reject
+- [x] `Context` has no `operationId` on the WS path; the HTTP path is unchanged
+- [x] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
 
 ## Comments
+
+- Implemented on `claude/realtime-foundation-tickets-8ercvt`.
+  - `isTrustedWebSocketOrigin(origin, host)` is exported from `ws-server.ts`; the host match accepts the request host under both `http` and `https`, because a TLS-terminating proxy hands the server an `http` socket while the browser saw `https`. An unparseable `Origin` (`null`, garbage) is refused.
+  - `stopTrpcWebSocket()` removes its own `upgrade` listener (so a restart of the socket server in one process never leaves two handlers racing), sends 1012 to every client, and gives them `CLOSE_GRACE_MS` (2 s) to answer before terminating the rest; `wss.close()` resolves only once every client is gone, so a dead client can no longer stretch the shutdown.
+  - Node counts an upgraded socket as a live connection, so `server.close()` would wait on the WebSockets it never closes (measured: it holds until the socket dies). `shutdown.ts` therefore starts the HTTP close, awaits `stopTrpcWebSocket()`, and only then awaits the HTTP close — "right after the HTTP server closes" its listener, not its last connection.
+  - `Context.operationId` is optional; the HTTP builders still set it, the WS context omits it, and `authedProcedure` reads `ctx.operationId ?? null`. `createWsContext` no longer imports `getVerifiedSession`.
+  - `packages/trpc/__tests__/ws-server.test.ts` runs a real `http` server and real `ws` clients on an ephemeral port (17 cases). The `server.on("close")` handler is gone and the test asserts the HTTP server has no close listener.

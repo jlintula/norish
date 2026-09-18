@@ -48,7 +48,7 @@ const withAuth = middleware(async ({ ctx, next }) => {
         userIds: allUserIds,
         householdUserIds: householdUserIds.length > 0 ? householdUserIds : null,
         isServerAdmin,
-        operationId: ctx.operationId,
+        operationId: ctx.operationId ?? null,
       },
     })
   );

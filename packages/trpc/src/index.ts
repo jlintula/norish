@@ -14,5 +14,5 @@ export {
   type SharedRecipeProcedureContext,
 } from "./middleware";
 export { type PermissionAction } from "@norish/auth/permissions";
-export { initTrpcWebSocket } from "./ws-server";
+export { initTrpcWebSocket, stopTrpcWebSocket } from "./ws-server";
 export type { ApiKeyMetadataDto, UserSettingsDto } from "./routers/user/types";
