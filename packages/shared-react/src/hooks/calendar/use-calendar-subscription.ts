@@ -1,32 +1,15 @@
-import { useSubscription } from "@trpc/tanstack-react-query";
-
 import type { PlannedItemFromQuery } from "@norish/shared/contracts";
-import type {
-  PlannedItemWithRecipePayload,
-  SlotItemSortUpdate,
-} from "@norish/shared/contracts/zod";
+import type { CalendarRealtime } from "@norish/shared/contracts/realtime/calendar";
+import type { EventName, PayloadOf } from "@norish/shared/contracts/realtime/catalogue";
+import type { PlannedItemWithRecipePayload } from "@norish/shared/contracts/zod";
 
+import { useRealtimeSubscription } from "../../realtime/use-realtime-subscription";
 import type { CalendarCacheHelpers, CreateCalendarHooksOptions } from "./types";
+
+type Payload<E extends EventName<CalendarRealtime>> = PayloadOf<CalendarRealtime, E>;
 
 type CreateUseCalendarSubscriptionOptions = CreateCalendarHooksOptions & {
   useCalendarCacheHelpers: (startISO: string, endISO: string) => CalendarCacheHelpers;
-};
-
-type SubscriptionEnvelope<TPayload> = {
-  payload: TPayload;
-};
-
-type ItemPayload = {
-  item: PlannedItemWithRecipePayload;
-};
-
-type ItemDeletedPayload = {
-  itemId: string;
-};
-
-type ItemMovedPayload = ItemPayload & {
-  targetSlotItems: SlotItemSortUpdate[];
-  sourceSlotItems: SlotItemSortUpdate[] | null;
 };
 
 function isDateInRange(date: string, startISO: string, endISO: string) {
@@ -97,82 +80,80 @@ export function createUseCalendarSubscription({
       setCalendarData((prev) => updater(prev ?? []));
     };
 
-    useSubscription(
-      trpc.calendar.onItemCreated.subscriptionOptions(undefined, {
-        onData: ({ payload }: SubscriptionEnvelope<ItemPayload>) => {
-          setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
-        },
-      })
-    );
+    // A lagged subscription refetches the range this screen shows.
+    const lag = { onLag: invalidate };
 
-    useSubscription(
-      trpc.calendar.onItemDeleted.subscriptionOptions(undefined, {
-        onData: ({ payload }: SubscriptionEnvelope<ItemDeletedPayload>) => {
-          setItems((prev) => prev.filter((item) => item.id !== payload.itemId));
-        },
-      })
-    );
+    useRealtimeSubscription<Payload<"itemCreated">>(trpc.calendar.onItemCreated, {
+      ...lag,
+      onEvent: (payload) => {
+        setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
+      },
+    });
 
-    useSubscription(
-      trpc.calendar.onItemMoved.subscriptionOptions(undefined, {
-        onData: ({ payload }: SubscriptionEnvelope<ItemMovedPayload>) => {
-          setItems((prev) => {
-            const itemIsInRange = isDateInRange(payload.item.date, startISO, endISO);
-            const targetSortMap = new Map(
-              payload.targetSlotItems.map((item) => [item.id, item.sortOrder])
-            );
-            const sourceSortMap = payload.sourceSlotItems
-              ? new Map(payload.sourceSlotItems.map((item) => [item.id, item.sortOrder]))
-              : null;
+    useRealtimeSubscription<Payload<"itemDeleted">>(trpc.calendar.onItemDeleted, {
+      ...lag,
+      onEvent: (payload) => {
+        setItems((prev) => prev.filter((item) => item.id !== payload.itemId));
+      },
+    });
 
-            const updated = prev
-              .filter((item) => item.id !== payload.item.id || itemIsInRange)
-              .map((item) => {
-                if (item.id === payload.item.id) {
-                  return toPlannedItemFromPayload(payload.item, item);
-                }
+    useRealtimeSubscription<Payload<"itemMoved">>(trpc.calendar.onItemMoved, {
+      ...lag,
+      onEvent: (payload) => {
+        setItems((prev) => {
+          const itemIsInRange = isDateInRange(payload.item.date, startISO, endISO);
+          const targetSortMap = new Map(
+            payload.targetSlotItems.map((item) => [item.id, item.sortOrder])
+          );
+          const sourceSortMap = payload.sourceSlotItems
+            ? new Map(payload.sourceSlotItems.map((item) => [item.id, item.sortOrder]))
+            : null;
 
-                if (targetSortMap.has(item.id)) {
-                  return {
-                    ...item,
-                    sortOrder: targetSortMap.get(item.id)!,
-                  };
-                }
+          const updated = prev
+            .filter((item) => item.id !== payload.item.id || itemIsInRange)
+            .map((item) => {
+              if (item.id === payload.item.id) {
+                return toPlannedItemFromPayload(payload.item, item);
+              }
 
-                if (sourceSortMap?.has(item.id)) {
-                  return {
-                    ...item,
-                    sortOrder: sourceSortMap.get(item.id)!,
-                  };
-                }
+              if (targetSortMap.has(item.id)) {
+                return {
+                  ...item,
+                  sortOrder: targetSortMap.get(item.id)!,
+                };
+              }
 
-                return item;
-              });
+              if (sourceSortMap?.has(item.id)) {
+                return {
+                  ...item,
+                  sortOrder: sourceSortMap.get(item.id)!,
+                };
+              }
 
-            if (!itemIsInRange || updated.some((item) => item.id === payload.item.id)) {
-              return sortCalendarItems(updated);
-            }
+              return item;
+            });
 
-            return sortCalendarItems([...updated, toPlannedItemFromPayload(payload.item)]);
-          });
-        },
-      })
-    );
+          if (!itemIsInRange || updated.some((item) => item.id === payload.item.id)) {
+            return sortCalendarItems(updated);
+          }
 
-    useSubscription(
-      trpc.calendar.onItemUpdated.subscriptionOptions(undefined, {
-        onData: ({ payload }: SubscriptionEnvelope<ItemPayload>) => {
-          setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
-        },
-      })
-    );
+          return sortCalendarItems([...updated, toPlannedItemFromPayload(payload.item)]);
+        });
+      },
+    });
 
-    useSubscription(
-      trpc.calendar.onFailed.subscriptionOptions(undefined, {
-        onData: () => {
-          invalidate();
-        },
-      })
-    );
+    useRealtimeSubscription<Payload<"itemUpdated">>(trpc.calendar.onItemUpdated, {
+      ...lag,
+      onEvent: (payload) => {
+        setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
+      },
+    });
+
+    useRealtimeSubscription<Payload<"failed">>(trpc.calendar.onFailed, {
+      ...lag,
+      onEvent: () => {
+        invalidate();
+      },
+    });
   };
 }

@@ -16,6 +16,7 @@ import {
 
 import type { RecipeDetailContextValue } from "../src/hooks/recipe-detail/recipe-detail-context";
 import type { CreateRecipeHooksOptions } from "../src/hooks/recipes/types";
+import { trackedEvent } from "./realtime/tracked-event";
 
 const useSubscriptionMock = vi.hoisted(() => vi.fn());
 
@@ -312,20 +313,15 @@ describe("recipe share hooks", () => {
     expect(useSubscriptionMock).toHaveBeenCalledTimes(1);
 
     const options = useSubscriptionMock.mock.calls[0]?.[0] as {
-      onData?: (event: {
-        payload: {
-          kind: string;
-          share: { type: string; recipeId: string; shareId: string; version: number };
-        };
-      }) => void;
+      onData?: (event: unknown) => void;
     };
 
-    options.onData?.({
-      payload: {
+    options.onData?.(
+      trackedEvent({
         kind: "created",
         share: { type: "created", recipeId: "recipe-1", shareId: "share-1", version: 1 },
-      },
-    });
+      })
+    );
 
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: [["recipes", "shareList"], { input: { recipeId: "recipe-1" }, type: "query" }],
@@ -334,12 +330,12 @@ describe("recipe share hooks", () => {
       queryKey: [["recipes", "shareGet"], { input: { id: "share-1" }, type: "query" }],
     });
 
-    options.onData?.({
-      payload: {
+    options.onData?.(
+      trackedEvent({
         kind: "deleted",
         share: { type: "deleted", recipeId: "recipe-1", shareId: "share-1", version: 2 },
-      },
-    });
+      })
+    );
 
     expect(removeQueries).toHaveBeenCalledWith({
       queryKey: [["recipes", "shareGet"], { input: { id: "share-1" }, type: "query" }],

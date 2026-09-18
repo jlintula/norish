@@ -87,16 +87,6 @@ export const CURSOR_MARK: RealtimeCursorMark = Object.freeze({ mark: "cursor" })
  */
 export const REALTIME_LAGGED = "REALTIME_LAGGED";
 
-/**
- * Normalized subscription data as seen by legacy client-side handlers.
- *
- * @deprecated Leaves with the last compatibility consumers of the old layer.
- */
-export interface NormalizedSubscriptionData<T = unknown> {
-  meta: RealtimeEventMeta | null;
-  payload: T;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === "object";
 }

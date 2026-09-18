@@ -3,6 +3,8 @@ import { useCalendarSubscription } from "@/hooks/calendar/use-calendar-subscript
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { adaptLegacyFrame } from "../realtime-test-utils";
+
 import { createTestQueryClient, createTestWrapper } from "./test-utils";
 
 type SubscriptionCallback = (data: unknown) => void;
@@ -20,35 +22,35 @@ vi.mock("@/app/providers/trpc-provider", () => ({
       },
       onItemCreated: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
-          subscriptionCallbacks["onItemCreated"] = options?.onData;
+          subscriptionCallbacks["onItemCreated"] = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         },
       },
       onItemDeleted: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
-          subscriptionCallbacks["onItemDeleted"] = options?.onData;
+          subscriptionCallbacks["onItemDeleted"] = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         },
       },
       onItemMoved: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
-          subscriptionCallbacks["onItemMoved"] = options?.onData;
+          subscriptionCallbacks["onItemMoved"] = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         },
       },
       onItemUpdated: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
-          subscriptionCallbacks["onItemUpdated"] = options?.onData;
+          subscriptionCallbacks["onItemUpdated"] = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         },
       },
       onFailed: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
-          subscriptionCallbacks["onFailed"] = options?.onData;
+          subscriptionCallbacks["onFailed"] = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         },

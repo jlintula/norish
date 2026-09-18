@@ -9,6 +9,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { adaptLegacyFrame } from "../realtime-test-utils";
+
 type Callback = (data: { payload: unknown }) => void;
 
 const callbacks: Record<string, Callback> = {};
@@ -22,8 +24,8 @@ const LINKS_KEY = [["stores", "aisleLinks"], { type: "query" }];
 
 function subscription(name: string) {
   return {
-    subscriptionOptions: (_input: unknown, options: { onData: Callback }) => {
-      callbacks[name] = options.onData;
+    subscriptionOptions: (_input: unknown, options: { onData: (data: unknown) => void }) => {
+      callbacks[name] = adaptLegacyFrame(options.onData);
 
       return { queryKey: [name] };
     },

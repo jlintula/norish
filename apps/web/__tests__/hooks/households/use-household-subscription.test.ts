@@ -1,6 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { adaptLegacyFrame } from "../realtime-test-utils";
+
 import {
   createMockHouseholdAdminSettings,
   createMockHouseholdData,
@@ -29,70 +31,70 @@ vi.mock("@/app/providers/trpc-provider", () => ({
       },
       onCreated: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onCreated = options?.onData;
+          subscriptionCallbacks.onCreated = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onKicked: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onKicked = options?.onData;
+          subscriptionCallbacks.onKicked = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onFailed: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onFailed = options?.onData;
+          subscriptionCallbacks.onFailed = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onUserJoined: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onUserJoined = options?.onData;
+          subscriptionCallbacks.onUserJoined = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onUserLeft: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onUserLeft = options?.onData;
+          subscriptionCallbacks.onUserLeft = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onMemberRemoved: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onMemberRemoved = options?.onData;
+          subscriptionCallbacks.onMemberRemoved = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onAdminTransferred: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onAdminTransferred = options?.onData;
+          subscriptionCallbacks.onAdminTransferred = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onJoinCodeRegenerated: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onJoinCodeRegenerated = options?.onData;
+          subscriptionCallbacks.onJoinCodeRegenerated = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onAllergiesUpdated: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onAllergiesUpdated = options?.onData;
+          subscriptionCallbacks.onAllergiesUpdated = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),
       },
       onMemberProfileUpdated: {
         subscriptionOptions: vi.fn((_, options) => {
-          subscriptionCallbacks.onMemberProfileUpdated = options?.onData;
+          subscriptionCallbacks.onMemberProfileUpdated = adaptLegacyFrame(options?.onData);
 
           return { enabled: true };
         }),

@@ -44,7 +44,7 @@ const createRecovery = vi.hoisted(() => vi.fn(() => recovery));
 
 let user: { id: string } | null = null;
 let connectivity = { isLive: true, isOffline: false };
-let wsStatus: "idle" | "connecting" | "connected" | "disconnected" = "idle";
+let wsStatus: "idle" | "connected" | "disconnected" = "idle";
 
 vi.mock("@/context/user-context", () => ({ useUserContext: () => ({ user }) }));
 vi.mock("@/app/providers/connectivity-provider", () => ({ useConnectivity: () => connectivity }));

@@ -4,38 +4,7 @@ import type { AppRouter } from "@norish/trpc/client";
 
 type TrpcContext = ReturnType<typeof createTRPCContext<AppRouter>>;
 
-type SubscriptionOptionsFactory = (
-  input: undefined,
-  options?: {
-    enabled?: boolean;
-    onData?: (payload: unknown) => void;
-    onError?: (error: unknown) => void;
-  }
-) => unknown;
-
-type SubscriptionProceduresContract = {
-  recipes: {
-    onCreated: { subscriptionOptions: SubscriptionOptionsFactory };
-    onImportStarted: { subscriptionOptions: SubscriptionOptionsFactory };
-    onImported: { subscriptionOptions: SubscriptionOptionsFactory };
-    onShareEvent: { subscriptionOptions: SubscriptionOptionsFactory };
-    onUpdated: { subscriptionOptions: SubscriptionOptionsFactory };
-    onDeleted: { subscriptionOptions: SubscriptionOptionsFactory };
-    onConverted: { subscriptionOptions: SubscriptionOptionsFactory };
-    onFailed: { subscriptionOptions: SubscriptionOptionsFactory };
-    onEnrichment: { subscriptionOptions: SubscriptionOptionsFactory };
-    onRecipeBatchCreated: { subscriptionOptions: SubscriptionOptionsFactory };
-  };
-  permissions: {
-    onPolicyUpdated: { subscriptionOptions: SubscriptionOptionsFactory };
-  };
-  ratings: {
-    onRatingUpdated: { subscriptionOptions: SubscriptionOptionsFactory };
-    onRatingFailed: { subscriptionOptions: SubscriptionOptionsFactory };
-  };
-};
-
-export type TrpcHookBinding = ReturnType<TrpcContext["useTRPC"]> & SubscriptionProceduresContract;
+export type TrpcHookBinding = ReturnType<TrpcContext["useTRPC"]>;
 
 export interface CreateRecipeHooksOptions {
   useTRPC: () => TrpcHookBinding;
