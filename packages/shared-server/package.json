@@ -38,6 +38,10 @@
     "./lib/workspace-paths": "./src/lib/workspace-paths.ts",
     "./lib/operation-context": "./src/lib/operation-context.ts",
     "./realtime/caldav": "./src/realtime/caldav.ts",
+    "./realtime/channel": "./src/realtime/channel.ts",
+    "./realtime/domain": "./src/realtime/domain.ts",
+    "./realtime/hub": "./src/realtime/hub.ts",
+    "./realtime/resume": "./src/realtime/resume.ts",
     "./realtime/cookbooks": "./src/realtime/cookbooks.ts",
     "./realtime/connection-invalidation": "./src/realtime/connection-invalidation.ts",
     "./realtime/groceries": "./src/realtime/groceries.ts",
@@ -47,6 +51,7 @@
     "./realtime/recipes": "./src/realtime/recipes.ts",
     "./realtime/stores": "./src/realtime/stores.ts",
     "./redis/client": "./src/redis/client.ts",
+    "./redis/url": "./src/redis/url.ts",
     "./redis/pubsub": "./src/redis/pubsub.ts",
     "./redis/subscription-multiplexer": "./src/redis/subscription-multiplexer.ts"
   },

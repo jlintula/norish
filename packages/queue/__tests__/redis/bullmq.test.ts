@@ -1,7 +1,7 @@
 /**
- * Redis connection singletons across duplicate module instances.
+ * BullMQ connection singleton across duplicate module instances.
  *
- * These modules are evaluated more than once per process — development resolves
+ * This module is evaluated more than once per process — development resolves
  * `@norish/queue/*` through the app's path alias into the source tree from one
  * import chain and through the node_modules copy from another. A "singleton"
  * held in a module-local is then one connection per instance, and shutdown
@@ -13,17 +13,16 @@
 
 // @vitest-environment node
 
+import type { RedisOptions } from "ioredis";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const constructed: { url?: string }[] = [];
+const constructed: RedisOptions[] = [];
 
 class MockRedis {
   status = "ready";
 
-  constructor(url?: string | object) {
-    const record = typeof url === "string" ? { url } : {};
-
-    constructed.push(record);
+  constructor(options: RedisOptions) {
+    constructed.push(options);
   }
 
   on = vi.fn();
@@ -40,7 +39,7 @@ class MockRedis {
 vi.mock("ioredis", () => ({ default: MockRedis, Redis: MockRedis }));
 
 vi.mock("@norish/config/env-config-server", () => ({
-  SERVER_CONFIG: { REDIS_URL: "redis://localhost:6379" },
+  SERVER_CONFIG: { REDIS_URL: "rediss://worker:hunter2@redis.local:6380/4" },
 }));
 
 vi.mock("@norish/shared-server/logger", () => ({
@@ -54,8 +53,6 @@ beforeEach(() => {
   const globalForRedis = globalThis as unknown as Record<string, unknown>;
 
   delete globalForRedis.bullClient;
-  delete globalForRedis.publisherClient;
-  delete globalForRedis.connectionPromise;
 });
 
 describe("BullMQ connection", () => {
@@ -83,46 +80,20 @@ describe("BullMQ connection", () => {
 
     expect(client.quit).toHaveBeenCalledOnce();
   });
-});
 
-describe("publisher connection", () => {
-  it("hands the same connection to a second module instance", async () => {
+  it("connects with every part of the URL, TLS and database index included", async () => {
     vi.resetModules();
-    const first = await import("../../src/redis/client");
+    const { getBullClient } = await import("../../src/redis/bullmq");
 
-    vi.resetModules();
-    const second = await import("../../src/redis/client");
+    getBullClient();
 
-    expect(await second.getPublisherClient()).toBe(await first.getPublisherClient());
-    expect(constructed).toHaveLength(1);
-  });
-
-  it("does not race two instances into two connections", async () => {
-    vi.resetModules();
-    const first = await import("../../src/redis/client");
-
-    vi.resetModules();
-    const second = await import("../../src/redis/client");
-
-    // Both ask before either has finished connecting, which is what startup
-    // does when two import chains reach Redis at once.
-    const [a, b] = await Promise.all([first.getPublisherClient(), second.getPublisherClient()]);
-
-    expect(a).toBe(b);
-    expect(constructed).toHaveLength(1);
-  });
-
-  it("lets any instance close the connection the other opened", async () => {
-    vi.resetModules();
-    const opener = await import("../../src/redis/client");
-
-    vi.resetModules();
-    const closer = await import("../../src/redis/client");
-
-    const client = await opener.getPublisherClient();
-
-    await closer.closeRedisConnections();
-
-    expect(client.quit).toHaveBeenCalledOnce();
+    expect(constructed[0]).toMatchObject({
+      host: "redis.local",
+      port: 6380,
+      username: "worker",
+      password: "hunter2",
+      db: 4,
+      tls: {},
+    });
   });
 });

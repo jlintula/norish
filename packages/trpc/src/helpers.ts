@@ -2,7 +2,7 @@ import type { TRPCSubscriptionProcedure } from "@trpc/server";
 
 import type { PolicyEmitContext } from "@norish/shared-server/realtime/policy";
 import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
-import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime-envelope";
+import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime/envelope";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { assertEventEnvelope, unwrapPayload } from "@norish/shared/lib/operation-helpers";
 

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
-import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime-envelope";
+import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime/envelope";
 import { trpcLogger } from "@norish/shared-server/logger";
-import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime-envelope";
+import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime/envelope";
 
 import type { TypedEmitter } from "../src/emitter";
 import {

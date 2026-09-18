@@ -29,5 +29,5 @@ export * from "./uploads";
 export * from "./store-types";
 export * from "./recurrence";
 export * from "./constants/caldav";
-export * from "./realtime-envelope";
+export * from "./realtime/envelope";
 export type * from "./store-page";

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
 import type { FullRecipeDTO, HouseholdWithUsersNamesDto, User } from "@norish/shared/contracts";
 import type { RecipeShareDto } from "@norish/shared/contracts/dto/recipe-shares";
-import type { OperationId } from "@norish/shared/contracts/realtime-envelope";
+import type { OperationId } from "@norish/shared/contracts/realtime/envelope";
 import { isUserServerAdmin } from "@norish/db";
 import { getActiveRecipeShareByToken } from "@norish/db/repositories/recipe-shares";
 import { getRecipeFull } from "@norish/db/repositories/recipes";

@@ -10,6 +10,7 @@
     "./contracts/zod": "./src/contracts/zod/index.ts",
     "./contracts/dto/auth": "./src/contracts/dto/auth.ts",
     "./contracts/dto/*": "./src/contracts/dto/*.d.ts",
+    "./contracts/realtime/*": "./src/contracts/realtime/*.ts",
     "./contracts/*": "./src/contracts/*.ts",
     "./lib/*": "./src/lib/*.ts"
   },

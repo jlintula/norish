@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime-envelope";
-import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime-envelope";
+import type { RealtimeEventEnvelope } from "@norish/shared/contracts/realtime/envelope";
+import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime/envelope";
 import {
   assertEventEnvelope,
   extractMeta,

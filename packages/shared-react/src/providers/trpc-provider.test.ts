@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime-envelope";
+import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime/envelope";
 
 import {
   isUnauthorizedTRPCError,

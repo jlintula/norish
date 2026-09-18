@@ -13,8 +13,8 @@ import type {
   RealtimeEventEnvelope,
   RealtimeEventMeta,
   RealtimeEventScope,
-} from "@norish/shared/contracts/realtime-envelope";
-import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime-envelope";
+} from "@norish/shared/contracts/realtime/envelope";
+import { ENVELOPE_VERSION } from "@norish/shared/contracts/realtime/envelope";
 
 const REALTIME_EVENT_SCOPES: readonly string[] = ["broadcast", "household", "user", "global"];
 

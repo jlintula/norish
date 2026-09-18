@@ -81,7 +81,7 @@ async function main() {
     log.info("-".repeat(50));
     log.info("Server ready:");
     log.info(`  HTTP: http://${hostname}:${port}`);
-    log.info(`  WS:   ws://${hostname}:${port}/ws`);
+    log.info(`  WS:   ws://${hostname}:${port}/trpc`);
     log.info(`  ENV:  ${SERVER_CONFIG.NODE_ENV}`);
     log.info("-".repeat(50));
   });

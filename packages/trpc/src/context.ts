@@ -3,7 +3,7 @@ import type { CreateWSSContextFnOptions } from "@trpc/server/adapters/ws";
 
 import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
 import type { User } from "@norish/shared/contracts";
-import type { OperationId } from "@norish/shared/contracts/realtime-envelope";
+import type { OperationId } from "@norish/shared/contracts/realtime/envelope";
 import {
   getVerifiedSession,
   readSessionPrincipal,

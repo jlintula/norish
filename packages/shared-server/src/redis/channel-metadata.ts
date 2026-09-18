@@ -12,7 +12,7 @@
  *   norish:recipes:global:created             → scope=global, event=created
  */
 
-import type { RealtimeEventScope } from "@norish/shared/contracts/realtime-envelope";
+import type { RealtimeEventScope } from "@norish/shared/contracts/realtime/envelope";
 
 const CHANNEL_PREFIX = "norish";
 
