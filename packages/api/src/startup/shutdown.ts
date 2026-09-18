@@ -3,7 +3,7 @@
  *
  * Manages coordinated shutdown of all server components with timeouts
  * to prevent zombie processes. Ensures resources are released in the
- * correct order: HTTP -> CalDAV -> Workers -> extra runtime tasks -> Redis.
+ * correct order: HTTP → WebSocket → internal listeners → workers → hub → Redis.
  */
 
 import type { Server } from "node:http";
@@ -12,6 +12,7 @@ import { stopCaldavSync } from "@norish/api/caldav/event-listener";
 import { stopRecipeEnrichmentListener } from "@norish/api/recipes/enrichment-listener";
 import { stopWorkers } from "@norish/queue/start-workers";
 import { serverLogger as log } from "@norish/shared-server/logger";
+import { stopRealtimeHub } from "@norish/shared-server/realtime/hub";
 import { closeRedisConnections } from "@norish/shared-server/redis/client";
 
 type ShutdownTask = {
@@ -70,11 +71,14 @@ let isShuttingDown = false;
  * Perform graceful shutdown of all server components.
  *
  * Shutdown order:
- * 1. HTTP server - stop accepting new connections, drain existing
- * 2. CalDAV sync - abort event subscriptions
+ * 1. HTTP server - stop accepting new connections, drain existing (the
+ *    WebSocket server closes with it)
+ * 2. Internal listeners - CalDAV sync and Recipe Enrichment release their hub
+ *    registrations
  * 3. BullMQ workers - complete current jobs, close queues
  * 4. Extra shutdown tasks - stop embedded child processes or other runtime helpers
- * 5. Redis connections - close after all consumers stopped
+ * 5. Realtime hub - end every live subscription, quit the subscriber connection
+ * 6. Redis connections - close after all consumers stopped
  */
 async function performShutdown(
   server: Server,
@@ -102,8 +106,8 @@ async function performShutdown(
       log.warn({ err }, "HTTP server close failed or timed out, continuing shutdown");
     }
 
-    // 2. Stop CalDAV sync service (aborts event subscriptions)
-    stopCaldavSync();
+    // 2. Stop CalDAV sync service (releases its hub registrations)
+    await withTimeout(stopCaldavSync(), SHUTDOWN_TIMEOUT_MS, "Stop CalDAV sync");
     log.info("CalDAV sync service stopped");
 
     // 3. Stop listening for newly usable recipes
@@ -123,7 +127,10 @@ async function performShutdown(
       log.info(`${task.name} completed`);
     }
 
-    // 6. Close Redis pub/sub connections (after all consumers stopped)
+    // 6. Stop the realtime hub: every live subscription ends, the subscriber quits
+    await withTimeout(stopRealtimeHub(), SHUTDOWN_TIMEOUT_MS, "Stop realtime hub");
+
+    // 7. Close Redis connections (after all consumers stopped)
     await withTimeout(closeRedisConnections(), SHUTDOWN_TIMEOUT_MS, "Close Redis");
     log.info("Redis connections closed");
 

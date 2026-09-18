@@ -127,13 +127,7 @@ function createMockUseTRPC() {
           { input: { id }, type: "query" },
         ],
       },
-      onShareCreated: { subscriptionOptions: createSubscriptionOptionsFactory("onShareCreated") },
-      onShareUpdated: { subscriptionOptions: createSubscriptionOptionsFactory("onShareUpdated") },
-      onShareRevoked: { subscriptionOptions: createSubscriptionOptionsFactory("onShareRevoked") },
-      onShareDeleted: { subscriptionOptions: createSubscriptionOptionsFactory("onShareDeleted") },
-      onShareReactivated: {
-        subscriptionOptions: createSubscriptionOptionsFactory("onShareReactivated"),
-      },
+      onShareEvent: { subscriptionOptions: createSubscriptionOptionsFactory("onShareEvent") },
     },
   };
 
@@ -314,25 +308,22 @@ describe("recipe share hooks", () => {
       );
     });
 
-    expect(useSubscriptionMock).toHaveBeenCalledTimes(5);
+    // One subscription carries every share lifecycle transition.
+    expect(useSubscriptionMock).toHaveBeenCalledTimes(1);
 
-    const createdOptions = useSubscriptionMock.mock.calls[0]?.[0] as {
+    const options = useSubscriptionMock.mock.calls[0]?.[0] as {
       onData?: (event: {
-        payload: { type: string; recipeId: string; shareId: string; version: number };
+        payload: {
+          kind: string;
+          share: { type: string; recipeId: string; shareId: string; version: number };
+        };
       }) => void;
     };
-    const deletedOptions = useSubscriptionMock.mock.calls[3]?.[0] as {
-      onData?: (event: {
-        payload: { type: string; recipeId: string; shareId: string; version: number };
-      }) => void;
-    };
 
-    createdOptions.onData?.({
+    options.onData?.({
       payload: {
-        type: "created",
-        recipeId: "recipe-1",
-        shareId: "share-1",
-        version: 1,
+        kind: "created",
+        share: { type: "created", recipeId: "recipe-1", shareId: "share-1", version: 1 },
       },
     });
 
@@ -343,12 +334,10 @@ describe("recipe share hooks", () => {
       queryKey: [["recipes", "shareGet"], { input: { id: "share-1" }, type: "query" }],
     });
 
-    deletedOptions.onData?.({
+    options.onData?.({
       payload: {
-        type: "deleted",
-        recipeId: "recipe-1",
-        shareId: "share-1",
-        version: 2,
+        kind: "deleted",
+        share: { type: "deleted", recipeId: "recipe-1", shareId: "share-1", version: 2 },
       },
     });
 

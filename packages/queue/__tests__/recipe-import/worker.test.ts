@@ -15,7 +15,7 @@ const createRecipeWithRefs = vi.fn();
 const dashboardRecipe = vi.fn();
 const recipeExistsByUrlForPolicy = vi.fn();
 const getDecryptedTokensByUserId = vi.fn();
-const emitByPolicy = vi.fn();
+const publishRecipe = vi.fn(async () => undefined);
 const parseRecipeFromUrl = vi.fn();
 const withDishColor = vi.fn();
 
@@ -37,12 +37,8 @@ vi.mock("@norish/queue/api-handlers", () => ({
   requireQueueApiHandler: vi.fn(() => parseRecipeFromUrl),
 }));
 
-vi.mock("@norish/shared-server/realtime/policy", () => ({
-  emitByPolicy,
-}));
-
 vi.mock("@norish/shared-server/realtime/recipes", () => ({
-  recipeEmitter: {},
+  recipes: { publish: publishRecipe },
 }));
 
 vi.mock("@norish/shared-server/logger", () => ({

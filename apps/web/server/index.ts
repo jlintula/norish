@@ -13,6 +13,7 @@ import { initializeServerConfig, SERVER_CONFIG } from "@norish/config/env-config
 import { initializeQueues } from "@norish/queue/registry";
 import { startWorkers } from "@norish/queue/start-workers";
 import { serverLogger as log, redactUrl } from "@norish/shared-server/logger";
+import { startRealtimeHub } from "@norish/shared-server/realtime/hub";
 
 import { startEmbeddedParser } from "./embedded-parser";
 
@@ -49,6 +50,11 @@ async function main() {
   log.info("-".repeat(50));
 
   registerApiHandlersForQueue();
+
+  // The one Redis subscriber connection of this process; every internal
+  // listener and tRPC subscription registers on it.
+  await startRealtimeHub();
+  log.info("-".repeat(50));
 
   initCaldavSync();
   log.info("CalDAV sync service initialized");

@@ -11,14 +11,20 @@
 
 **Spec:** `.scratch/realtime-foundation/spec.md` § Realtime Hub, § Connection lifecycle
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] `grep -rn "createSubscriberClient" packages apps --include=*.ts` matches only `packages/shared-server/src/realtime/hub.ts` and `redis/client.ts`
-- [ ] `connection-manager.ts` has no message loop, no `setTimeout`, no `globalThis` subscriber; a test delivers a `connection.invalidate` envelope through a fake hub and asserts `terminateUserConnections(userId, reason)`
-- [ ] `enrichment-listener.test.ts` keeps its handler assertions and asserts `init` registers before resolving
-- [ ] A test enumerates the events `handleCalendarEvent` handles and asserts each has an `internal` companion in the calendar catalogue and a `hub.on` registration
-- [ ] `startRecipeSubscriptions` is gone; `stopCaldavSync` is awaited in `shutdown.ts`
-- [ ] Hub started before `initCaldavSync`, stopped after workers; the startup log shows `Realtime hub started` before the CalDAV line
-- [ ] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
+- [x] `grep -rn "createSubscriberClient" packages apps --include=*.ts` matches only `packages/shared-server/src/realtime/hub.ts` and `redis/client.ts`
+- [x] `connection-manager.ts` has no message loop, no `setTimeout`, no `globalThis` subscriber; a test delivers a `connection.invalidate` envelope through a fake hub and asserts `terminateUserConnections(userId, reason)`
+- [x] `enrichment-listener.test.ts` keeps its handler assertions and asserts `init` registers before resolving
+- [x] A test enumerates the events `handleCalendarEvent` handles and asserts each has an `internal` companion in the calendar catalogue and a `hub.on` registration
+- [x] `startRecipeSubscriptions` is gone; `stopCaldavSync` is awaited in `shutdown.ts`
+- [x] Hub started before `initCaldavSync`, stopped after workers; the startup log shows `Realtime hub started` before the CalDAV line
+- [x] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
 
 ## Comments
+
+- Implemented on `claude/realtime-foundation-tickets-db3b92` together with 04.
+  - `startConnectionInvalidation()` is called from `initTrpcWebSocket` (the hub is started earlier in `apps/web/server/index.ts`) and the returned release runs from the server's `close` handler; ticket 06 moves that into `stopTrpcWebSocket()`. `unregisterConnection` is synchronous now that there is no multiplexer to close, and the `ws.on("close")` handler wraps it in try/catch.
+  - `initRecipeEnrichmentListener` is still `async` for its callers' sake, but the registration is synchronous: `hub.on()` throws when the hub is not started, and that rejection is what "init rejects instead of reporting success" now means.
+  - `stopCaldavSync()` resolves once every companion registration is released; `shutdown.ts` awaits it with the same timeout as the other steps, and `stopRealtimeHub()` runs after the workers and before `closeRedisConnections()`.
+  - Tests: `packages/trpc/__tests__/connection-manager.test.ts`, `packages/api/__tests__/recipes/enrichment-listener.test.ts` (rewritten against a fake hub), `packages/api/__tests__/caldav/event-listener.test.ts` (enumerates `CALDAV_CALENDAR_EVENTS` against the catalogue and the registrations).

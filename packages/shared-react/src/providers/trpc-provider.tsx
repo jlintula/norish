@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient } from "@trpc/client";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 
+import { isCursorMark } from "@norish/shared/contracts/realtime/envelope";
 import { unwrapPayload } from "@norish/shared/lib/operation-helpers";
 
 import type { CreateTRPCProviderBundleOptions } from "./trpc-links";
@@ -67,7 +68,12 @@ export function wrapSubscriptionObserverOptions(options: unknown): unknown {
 
   return {
     ...observerOptions,
-    onData: (data: unknown) => observerOptions.onData?.(withPayloadCompatibility(data)),
+    onData: (data: unknown) => {
+      // A Cursor Mark carries no event: the transport tracks it, handlers never see it.
+      if (isCursorMark(data)) return;
+
+      observerOptions.onData?.(withPayloadCompatibility(data));
+    },
   };
 }
 

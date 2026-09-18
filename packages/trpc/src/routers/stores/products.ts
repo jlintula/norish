@@ -18,6 +18,7 @@ import {
 import { getStoreById } from "@norish/db/repositories/stores";
 import { searchStore } from "@norish/queue/store-lookup/lookup";
 import { trpcLogger as log } from "@norish/shared-server/logger";
+import { stores } from "@norish/shared-server/realtime/stores";
 import {
   StoreProductChoiceSchema,
   StoreProductLinkLookupSchema,
@@ -30,7 +31,6 @@ import { resolveSearchAddress } from "@norish/shared/lib/search-address";
 
 import { authedProcedure } from "../../middleware";
 import { router } from "../../trpc";
-import { storeEmitter } from "./emitter";
 import { priceTheList } from "./pricing";
 import { assertStoreAccess } from "./stores-helpers";
 
@@ -71,7 +71,7 @@ const createProduct = authedProcedure
     const product = await createManualProduct(input);
 
     log.info({ userId: ctx.user.id, storeId: input.storeId }, "By-hand store product created");
-    storeEmitter.emitToHousehold(ctx.householdKey, "productUpdated", { product });
+    void stores.publish("productUpdated", { product }, { householdKey: ctx.householdKey });
 
     return product;
   });
@@ -94,7 +94,7 @@ const updateProduct = authedProcedure
         message: "Only a by-hand product can be edited",
       });
     }
-    storeEmitter.emitToHousehold(ctx.householdKey, "productUpdated", { product });
+    void stores.publish("productUpdated", { product }, { householdKey: ctx.householdKey });
 
     return product;
   });
@@ -246,14 +246,14 @@ const chooseProduct = authedProcedure
       });
 
       storeProductId = product.id;
-      storeEmitter.emitToHousehold(ctx.householdKey, "productUpdated", { product });
+      void stores.publish("productUpdated", { product }, { householdKey: ctx.householdKey });
     }
 
     if (input.choice.kind === "manual") {
       const product = await writeManualProduct(input.storeId, input.choice);
 
       storeProductId = product.id;
-      storeEmitter.emitToHousehold(ctx.householdKey, "productUpdated", { product });
+      void stores.publish("productUpdated", { product }, { householdKey: ctx.householdKey });
     }
 
     // A Pack Size the shopper set is the last word for whichever product the
@@ -261,13 +261,14 @@ const chooseProduct = authedProcedure
     if (storeProductId && input.pack !== undefined) {
       const product = await setPackSizeByHand(storeProductId, input.pack);
 
-      if (product) storeEmitter.emitToHousehold(ctx.householdKey, "productUpdated", { product });
+      if (product)
+        void stores.publish("productUpdated", { product }, { householdKey: ctx.householdKey });
     }
 
     await upsertProductLink(input.storeId, input.name, storeProductId);
     const link = await resolveProductLink(input.storeId, input.name);
 
-    if (link) storeEmitter.emitToHousehold(ctx.householdKey, "linkUpdated", { link });
+    if (link) void stores.publish("linkUpdated", { link }, { householdKey: ctx.householdKey });
 
     return link;
   });

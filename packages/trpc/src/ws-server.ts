@@ -9,8 +9,7 @@ import { trpcLogger } from "@norish/shared-server/logger";
 
 import {
   registerConnection,
-  startInvalidationListener,
-  stopInvalidationListener,
+  startConnectionInvalidation,
   unregisterConnection,
 } from "./connection-manager";
 import { createWsContext } from "./context";
@@ -43,10 +42,12 @@ type WsServerType = InstanceType<typeof WsServer>;
 const globalForWs = globalThis as unknown as {
   trpcWss: WsServerType | null;
   trpcHandler: ReturnType<typeof applyWSSHandler> | null;
+  stopConnectionInvalidation: (() => void) | null;
 };
 
 let trpcWss = globalForWs.trpcWss ?? null;
 let trpcHandler = globalForWs.trpcHandler ?? null;
+let stopConnectionInvalidation = globalForWs.stopConnectionInvalidation ?? null;
 
 export function initTrpcWebSocket(server: Server) {
   if (trpcWss) {
@@ -113,7 +114,6 @@ export function initTrpcWebSocket(server: Server) {
     }
 
     trpcWss!.handleUpgrade(req, socket, head, (ws: wsModule.WebSocket) => {
-      // Generate unique connection ID for multiplexer management
       const connectionId = randomUUID();
 
       req.connectionId = connectionId;
@@ -121,28 +121,40 @@ export function initTrpcWebSocket(server: Server) {
 
       // Track connection by userId for server-side termination
       if (userId) {
-        registerConnection(userId, ws, connectionId);
-        ws.on("close", () => unregisterConnection(userId, ws));
+        registerConnection(userId, ws);
+        ws.on("close", () => {
+          try {
+            unregisterConnection(userId, ws);
+          } catch (err) {
+            trpcLogger.error({ err, userId }, "Failed to unregister WebSocket connection");
+          }
+        });
       }
 
       trpcWss!.emit("connection", ws, req);
     });
   });
 
-  // Start listening for connection invalidation events
-  startInvalidationListener().catch((err) => {
+  // Scope Changes announced by any process close this one's sockets (ADR-0033).
+  // The hub is started before the HTTP server, so the registration is immediate.
+  try {
+    stopConnectionInvalidation = startConnectionInvalidation();
+    globalForWs.stopConnectionInvalidation = stopConnectionInvalidation;
+  } catch (err) {
     trpcLogger.error({ err }, "Failed to start invalidation listener");
-  });
+  }
 
-  server.on("close", async () => {
+  server.on("close", () => {
     trpcHandler?.broadcastReconnectNotification();
-    await stopInvalidationListener();
+    stopConnectionInvalidation?.();
     trpcWss?.close();
 
     trpcWss = null;
     trpcHandler = null;
+    stopConnectionInvalidation = null;
     globalForWs.trpcWss = null;
     globalForWs.trpcHandler = null;
+    globalForWs.stopConnectionInvalidation = null;
   });
 
   trpcLogger.info("WebSocket server started at /trpc");

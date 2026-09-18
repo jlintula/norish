@@ -1,17 +1,17 @@
 import { useSubscription } from "@trpc/tanstack-react-query";
 
 import type { CaldavSyncStatus, CaldavSyncStatusViewDto } from "@norish/shared/contracts";
-import type { CaldavSubscriptionEvents } from "@norish/trpc";
+import type {
+  CaldavSyncEvent,
+  CaldavSyncEventData,
+} from "@norish/shared/contracts/realtime/caldav";
 import { createClientLogger } from "@norish/shared/lib/logger";
 
 import type { CaldavCacheHelpers, CreateCaldavHooksOptions } from "./types";
 
 const log = createClientLogger("CaldavSubscription");
 
-type SyncEventPayload = {
-  type: keyof CaldavSubscriptionEvents;
-  data: CaldavSubscriptionEvents[keyof CaldavSubscriptionEvents];
-};
+type SyncEventPayload = CaldavSyncEvent;
 
 type CaldavItemStatusUpdatedPayload = {
   itemId: string;
@@ -71,7 +71,7 @@ export function createUseCaldavSubscription({
           const { type, data } = payload as SyncEventPayload;
 
           if (type === "configSaved") {
-            const payload = data as CaldavSubscriptionEvents["configSaved"];
+            const payload = data as CaldavSyncEventData["configSaved"];
 
             setConfig(() => payload.config);
           } else if (type === "syncCompleted" || type === "syncFailed") {
@@ -89,7 +89,7 @@ export function createUseCaldavSubscription({
             });
             invalidateSummary();
           } else if (type === "initialSyncComplete") {
-            const payload = data as CaldavSubscriptionEvents["initialSyncComplete"];
+            const payload = data as CaldavSyncEventData["initialSyncComplete"];
 
             toastAdapter.showSyncCompleteToast(payload.totalSynced, payload.totalFailed);
             invalidateSyncStatus();
@@ -107,10 +107,15 @@ export function createUseCaldavSubscription({
     const trpc = useTRPC();
     const { setStatuses, invalidateSummary } = useCaldavCacheHelpers();
 
+    // The item-status facts of the one sync subscription; ticket 07 folds this hook away.
     useSubscription(
-      trpc.caldavSubscriptions.onItemStatusUpdated.subscriptionOptions(undefined, {
+      trpc.caldavSubscriptions.onSyncEvent.subscriptionOptions(undefined, {
         onData: ({ payload }: any) => {
-          const data = payload as CaldavItemStatusUpdatedPayload;
+          const event = payload as SyncEventPayload;
+
+          if (event.type !== "itemStatusUpdated") return;
+
+          const data = event.data as CaldavItemStatusUpdatedPayload;
 
           setStatuses((prev) => {
             if (!prev) return prev;
@@ -131,10 +136,15 @@ export function createUseCaldavSubscription({
     const { invalidateSyncStatus, invalidateSummary } = useCaldavCacheHelpers();
     const toastAdapter = useToastAdapter();
 
+    // The initial-sync-complete fact of the one sync subscription; ticket 07 folds this hook away.
     useSubscription(
-      trpc.caldavSubscriptions.onInitialSyncComplete.subscriptionOptions(undefined, {
+      trpc.caldavSubscriptions.onSyncEvent.subscriptionOptions(undefined, {
         onData: ({ payload }: any) => {
-          const data = payload;
+          const event = payload as SyncEventPayload;
+
+          if (event.type !== "initialSyncComplete") return;
+
+          const data = event.data;
 
           toastAdapter.showSyncCompleteToast(data.totalSynced, data.totalFailed);
           invalidateSyncStatus();

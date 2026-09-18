@@ -153,10 +153,6 @@ vi.mock("@norish/db", () => ({ isUserServerAdmin: vi.fn() }));
 vi.mock("@norish/db/repositories/recipe-shares", () => ({ getActiveRecipeShareByToken: vi.fn() }));
 vi.mock("@norish/db/repositories/recipes", () => ({ getRecipeFull: vi.fn() }));
 vi.mock("@norish/shared-server/cache/household", () => ({ getCachedHouseholdForUser: vi.fn() }));
-vi.mock("@norish/shared-server/redis/subscription-multiplexer", () => ({
-  getOrCreateMultiplexer: vi.fn(),
-}));
-
 const { RealtimeLaggedError } = await import("@norish/shared-server/realtime/hub");
 const { defineRealtimeDomain } = await import("@norish/shared-server/realtime/domain");
 const { encodeCursor, identityHashFor, RESUME_TTL_SECONDS } =

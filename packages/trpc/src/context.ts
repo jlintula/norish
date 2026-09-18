@@ -1,7 +1,6 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import type { CreateWSSContextFnOptions } from "@trpc/server/adapters/ws";
 
-import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
 import type { User } from "@norish/shared/contracts";
 import type { OperationId } from "@norish/shared/contracts/realtime/envelope";
 import {
@@ -24,8 +23,6 @@ export type Context = {
   household: ContextHousehold | null;
   /** Unique ID for this WebSocket connection (WS only) */
   connectionId: string | null;
-  /** Subscription multiplexer for this connection (WS only, set lazily in middleware) */
-  multiplexer: SubscriptionMultiplexer | null;
   /** Client-generated operation ID for mutation correlation */
   operationId: OperationId | null;
 };
@@ -38,7 +35,6 @@ export async function createHttpContextFromHeaders(
     user: null,
     household: null,
     connectionId: null,
-    multiplexer: null,
     operationId,
   };
 
@@ -80,7 +76,7 @@ export async function createHttpContextFromHeaders(
         }
       : null;
 
-    return { user, household, connectionId: null, multiplexer: null, operationId };
+    return { user, household, connectionId: null, operationId };
   } catch {
     return anonymous;
   }
@@ -122,7 +118,7 @@ export async function createWsContext(opts: CreateWSSContextFnOptions): Promise<
     const identity = await getVerifiedSession(headers);
 
     if (!identity) {
-      return { user: null, household: null, connectionId, multiplexer: null, operationId: null };
+      return { user: null, household: null, connectionId, operationId: null };
     }
 
     const user: User = {
@@ -134,8 +130,8 @@ export async function createWsContext(opts: CreateWSSContextFnOptions): Promise<
       isServerAdmin: identity.isServerAdmin,
     };
 
-    return { user, household: null, connectionId, multiplexer: null, operationId: null };
+    return { user, household: null, connectionId, operationId: null };
   } catch {
-    return { user: null, household: null, connectionId, multiplexer: null, operationId: null };
+    return { user: null, household: null, connectionId, operationId: null };
   }
 }

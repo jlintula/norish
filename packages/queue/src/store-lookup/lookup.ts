@@ -21,7 +21,7 @@ import {
 } from "@norish/db/repositories/store-products";
 import { getStoreById } from "@norish/db/repositories/stores";
 import { createLogger } from "@norish/shared-server/logger";
-import { storeEmitter } from "@norish/shared-server/realtime/stores";
+import { stores } from "@norish/shared-server/realtime/stores";
 import { chooseUnmistakable } from "@norish/shared/lib/auto-link";
 import { pricedCandidates } from "@norish/shared/lib/currency";
 import { resolveSearchAddress } from "@norish/shared/lib/search-address";
@@ -42,11 +42,11 @@ export function staleBefore(now: Date = new Date()): Date {
 async function announceLink(householdKey: string, storeId: string, name: string): Promise<void> {
   const link = await resolveProductLink(storeId, name);
 
-  if (link) storeEmitter.emitToHousehold(householdKey, "linkUpdated", { link });
+  if (link) void stores.publish("linkUpdated", { link }, { householdKey });
 }
 
 function announceProduct(householdKey: string, product: StoreProductDto): void {
-  storeEmitter.emitToHousehold(householdKey, "productUpdated", { product });
+  void stores.publish("productUpdated", { product }, { householdKey });
 }
 
 /**

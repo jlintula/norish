@@ -30,7 +30,7 @@ const operationContextStore: AsyncLocalStorage<OperationContext> =
  * @example
  * ```ts
  * await runWithOperationContext({ operationId }, async () => {
- *   // Any emitter.publish() call here will include the operationId
+ *   // Any domain.publish() call here will include the operationId
  *   await processImportJob(job);
  * });
  * ```

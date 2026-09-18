@@ -80,7 +80,7 @@ function createMockQueue(jobs: ReturnType<typeof createMockJob>[] = []) {
 function createCaller(admin = true) {
   const ctx = createMockAdminContext(admin ? createMockAdminUser() : createMockUser());
 
-  return jobQueueProcedures.createCaller({ ...ctx, multiplexer: null } as never);
+  return jobQueueProcedures.createCaller(ctx as never);
 }
 
 describe("admin job queue procedures", () => {

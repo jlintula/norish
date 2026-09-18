@@ -1,6 +1,7 @@
 import { useSubscription } from "@trpc/tanstack-react-query";
 
 import type { RecipeShareLifecycleEventDto } from "@norish/shared/contracts";
+import type { RecipeShareEvent } from "@norish/shared/contracts/realtime/recipes";
 
 import type { CreateRecipeHooksOptions } from "../types";
 import type { RecipeShareCacheHelpers } from "./use-recipe-share-cache";
@@ -52,56 +53,13 @@ export function createUseRecipeShareSubscription(
       callbacks.onEvent?.(payload);
     };
 
+    // One subscription for every share lifecycle transition; `share.type` says which.
     useSubscription(
       asSubscriptionOptions(
-        trpc.recipes.onShareCreated.subscriptionOptions(undefined, {
+        trpc.recipes.onShareEvent.subscriptionOptions(undefined, {
           enabled: !!recipeId,
           onData: ({ payload }: any) => {
-            handleEvent(payload);
-          },
-        })
-      )
-    );
-
-    useSubscription(
-      asSubscriptionOptions(
-        trpc.recipes.onShareUpdated.subscriptionOptions(undefined, {
-          enabled: !!recipeId,
-          onData: ({ payload }: any) => {
-            handleEvent(payload);
-          },
-        })
-      )
-    );
-
-    useSubscription(
-      asSubscriptionOptions(
-        trpc.recipes.onShareRevoked.subscriptionOptions(undefined, {
-          enabled: !!recipeId,
-          onData: ({ payload }: any) => {
-            handleEvent(payload);
-          },
-        })
-      )
-    );
-
-    useSubscription(
-      asSubscriptionOptions(
-        trpc.recipes.onShareDeleted.subscriptionOptions(undefined, {
-          enabled: !!recipeId,
-          onData: ({ payload }: any) => {
-            handleEvent(payload);
-          },
-        })
-      )
-    );
-
-    useSubscription(
-      asSubscriptionOptions(
-        trpc.recipes.onShareReactivated.subscriptionOptions(undefined, {
-          enabled: !!recipeId,
-          onData: ({ payload }: any) => {
-            handleEvent(payload);
+            handleEvent((payload as RecipeShareEvent).share);
           },
         })
       )

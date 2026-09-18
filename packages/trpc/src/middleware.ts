@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import type { SubscriptionMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
 import type { FullRecipeDTO, HouseholdWithUsersNamesDto, User } from "@norish/shared/contracts";
 import type { RecipeShareDto } from "@norish/shared/contracts/dto/recipe-shares";
 import type { OperationId } from "@norish/shared/contracts/realtime/envelope";
@@ -9,7 +8,6 @@ import { getActiveRecipeShareByToken } from "@norish/db/repositories/recipe-shar
 import { getRecipeFull } from "@norish/db/repositories/recipes";
 import { getCachedHouseholdForUser } from "@norish/shared-server/cache/household";
 import { runWithOperationContext } from "@norish/shared-server/lib/operation-context";
-import { getOrCreateMultiplexer } from "@norish/shared-server/redis/subscription-multiplexer";
 import { ResolveSharedRecipeInputSchema } from "@norish/shared/contracts/zod/recipe-shares";
 
 import type { Context } from "./context";
@@ -38,14 +36,6 @@ const withAuth = middleware(async ({ ctx, next }) => {
   const householdKey = household?.id ?? user.id;
   const isServerAdmin = user.isServerAdmin ?? false;
 
-  // Get or create the subscription multiplexer for this WebSocket connection
-  // The multiplexer consolidates all Redis subscriptions into a single connection
-  let multiplexer: SubscriptionMultiplexer | null = ctx.multiplexer;
-
-  if (!multiplexer && ctx.connectionId) {
-    multiplexer = getOrCreateMultiplexer(ctx.connectionId, user.id, householdKey);
-  }
-
   const operationId = ctx.operationId ?? undefined;
 
   return runWithOperationContext({ operationId }, () =>
@@ -58,7 +48,6 @@ const withAuth = middleware(async ({ ctx, next }) => {
         userIds: allUserIds,
         householdUserIds: householdUserIds.length > 0 ? householdUserIds : null,
         isServerAdmin,
-        multiplexer,
         operationId: ctx.operationId,
       },
     })
@@ -122,7 +111,6 @@ export type AuthedProcedureContext = Context & {
   userIds: string[];
   householdUserIds: string[] | null;
   isServerAdmin: boolean;
-  multiplexer: SubscriptionMultiplexer | null;
   operationId: OperationId | null;
 };
 
