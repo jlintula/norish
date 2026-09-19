@@ -71,6 +71,7 @@
     "@norish/eslint-config": "workspace:*",
     "@norish/prettier-config": "workspace:*",
     "@norish/tsconfig": "workspace:*",
+    "@trpc/client": "catalog:",
     "@types/node": "catalog:",
     "@types/ws": "8.18.1",
     "eslint": "catalog:",

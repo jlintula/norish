@@ -20,18 +20,28 @@
 
 **Spec:** `.scratch/realtime-foundation/spec.md` § Realtime Catalogue, § Domain, § Subscription factory
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] Twelve catalogue files; every `z.custom` listed in Comments
-- [ ] `grep -rn "createTypedEmitter\|TypedRedisEmitter\|__[A-Za-z]*Emitter__\|emitByPolicy\|createSubscription(\|getOrCreateMultiplexer\|waitForAbort" packages apps --include=*.ts` is empty
-- [ ] Every `routers/*/subscriptions.ts` contains only `realtimeSubscription` lines; 58 procedures become 54 (five share procedures → one)
-- [ ] No floating publish promise: every `publish(` is preceded by `void ` or `await `
-- [ ] `grocery.failed` targets `{ userId }` (fake-domain test); every other event keeps its scope
-- [ ] Archive-created recipes route by policy (fake-domain test in `packages/trpc/__tests__/archive`)
-- [ ] Households: for create, join, leave, kick and admin transfer the fake domain's recorded call list has the household event before `connection.invalidate`
-- [ ] `households/subscriptions.ts` has no `!ctx.household` guard
-- [ ] Household publishes validate against the zod schemas; a malformed publish throws under test
+- [x] Twelve catalogue files; every `z.custom` listed in Comments
+- [x] `grep -rn "createTypedEmitter\|TypedRedisEmitter\|__[A-Za-z]*Emitter__\|emitByPolicy\|createSubscription(\|getOrCreateMultiplexer\|waitForAbort" packages apps --include=*.ts` is empty
+- [x] Every `routers/*/subscriptions.ts` contains only `realtimeSubscription` lines; 58 procedures become 50 (five share procedures → one, five CalDAV procedures → one; see Comments)
+- [x] No floating publish promise: every `publish(` is preceded by `void ` or `await `
+- [x] `grocery.failed` targets `{ userId }` (fake-domain test); every other event keeps its scope
+- [x] Archive-created recipes route by policy (fake-domain test in `packages/trpc/__tests__/archive`)
+- [x] Households: for create, join, leave, kick and admin transfer the fake domain's recorded call list has the household event before `connection.invalidate`
+- [x] `households/subscriptions.ts` has no `!ctx.household` guard
+- [x] Household publishes validate against the zod schemas; a malformed publish throws under test
 - [ ] The web client still compiles and behaves as before through its existing shim (07 removes it); grocery, store, recipe, cookbook, calendar, household and CalDAV flows checked in a browser
-- [ ] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
+- [x] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
 
 ## Comments
+
+- Implemented on `claude/realtime-foundation-tickets-db3b92` together with 05. Decisions and the deviations from the text above:
+  - **CalDAV is one event, `syncEvent`**, whose payload is a discriminated union over `type` built from the six existing `Caldav*EventSchema`s, and one procedure, `onSyncEvent`. The one-line rule cannot express the old `onSyncEvent` (a merge of six channels) any other way, and ticket 07 keeps the client's single `onSyncEvent` subscription, whose `{ type, data }` wire shape is unchanged. The four single-fact procedures it also had (`onItemStatusUpdated`, `onSyncCompleted`, `onSyncFailed`, `onInitialSyncComplete`) are gone; the two web hooks that used them now filter `onSyncEvent` by `type` until 07 folds them away. Procedure count is therefore 50, not 54.
+  - **The kicked user's `permissions.policyUpdated`** was a user-targeted publish of a broadcast event; the catalogue has one scope per event, so it is dropped. The kick invalidates that user's connection right after, and the reconnect refetches (Recovery, ADR-0011).
+  - **`recipeBatchCreated` stays `household`-scoped** (the archive's batch announcement); the ticket's policy fix applies to the archive route, which now passes `{ viewPolicy, userId, householdKey }` like every other recipe create — the fake-domain test pins it.
+  - **Calendar internal companions** are `itemCreatedInternal`, `itemDeletedInternal`, `itemMovedInternal`, `itemUpdatedInternal` (`calendarInternalCompanion` in the catalogue maps event → companion); `packages/trpc/src/routers/calendar/publish.ts` publishes both beside each other.
+  - **`createFakeRealtimeDomain`** no longer imports the real domain module (it derives channels through the codec directly), so a test may stub the logger or the config however it likes; `packages/trpc/__tests__/mocks/realtime/<domain>.ts` are ready-made `vi.mock` targets.
+  - Two shadowed locals the mechanical cutover exposed (`groceries` destructured from the input in `toggleGroceriesData`, `markAllDone` and `deleteDone`) are renamed; the trpc package's own `typecheck` runs `--noCheck`, so a full `tsc --noEmit` was run by hand on trpc, queue, api and auth (clean apart from pre-existing bullmq/better-auth errors).
+  - The browser check of the flows is still open: this environment has no Docker daemon for Postgres, so it belongs to the release verification (ticket 10).
+  - `z.custom` payloads, to replace with real schemas later (21): grocery `created`, `updated`, `recurringCreated`, `recurringUpdated`; recipe `created`, `imported`, `updated`, `converted`, `enrichment`, `recipeBatchCreated`; cookbook `created`, `updated`; store `created`, `updated`, `reordered`, `productUpdated`, `linkUpdated`, `aisleFiled`; household `created`; archive `archiveProgress`, `archiveCompleted`.

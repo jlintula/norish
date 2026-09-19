@@ -8,7 +8,6 @@
 import type { Job } from "bullmq";
 
 import type { RecipeImportJobData } from "@norish/queue/contracts/job-types";
-import type { PolicyEmitContext } from "@norish/shared-server/realtime/policy";
 import { createRecipeWithRefs, dashboardRecipe, recipeExistsByUrlForPolicy } from "@norish/db";
 import { getDecryptedTokensByUserId } from "@norish/db/repositories/site-auth-tokens";
 import { requireQueueApiHandler } from "@norish/queue/api-handlers";
@@ -16,8 +15,7 @@ import { getRecipePermissionPolicy } from "@norish/shared-server/config/server-c
 import { createLogger } from "@norish/shared-server/logger";
 import { withDishColor } from "@norish/shared-server/media/dish-color";
 import { deleteRecipeImagesDir } from "@norish/shared-server/media/storage";
-import { emitByPolicy } from "@norish/shared-server/realtime/policy";
-import { recipeEmitter } from "@norish/shared-server/realtime/recipes";
+import { recipes } from "@norish/shared-server/realtime/recipes";
 import { credentialSetsForUrl, rotateCredentialSet } from "@norish/shared/lib/site-auth-tokens";
 
 import { defineLazyWorker, QUEUE_NAMES, RECIPE_IMPORT_PROCESSING_TIMEOUT_MS } from "../config";
@@ -42,10 +40,10 @@ async function processImportJob(job: Job<RecipeImportJobData>): Promise<void> {
 
   const policy = await getRecipePermissionPolicy();
   const viewPolicy = policy.view;
-  const ctx: PolicyEmitContext = { userId, householdKey };
+  const ctx = { userId, householdKey };
 
   // Emit import started event
-  emitByPolicy(recipeEmitter, viewPolicy, ctx, "importStarted", { recipeId, url });
+  void recipes.publish("importStarted", { recipeId, url }, { viewPolicy: viewPolicy, ...ctx });
 
   // Check if recipe already exists (policy-aware)
   await reportStep(job, "dedupe-check");
@@ -64,11 +62,15 @@ async function processImportJob(job: Job<RecipeImportJobData>): Promise<void> {
 
       // Include pendingRecipeId so client can remove the skeleton
       // Show imported toast since no processing will follow for existing recipes
-      emitByPolicy(recipeEmitter, viewPolicy, ctx, "imported", {
-        recipe: dashboardDto,
-        pendingRecipeId: recipeId,
-        toast: "imported",
-      });
+      void recipes.publish(
+        "imported",
+        {
+          recipe: dashboardDto,
+          pendingRecipeId: recipeId,
+          toast: "imported",
+        },
+        { viewPolicy: viewPolicy, ...ctx }
+      );
     }
 
     return;
@@ -125,11 +127,15 @@ async function processImportJob(job: Job<RecipeImportJobData>): Promise<void> {
 
     // Import success is terminal here: enrichment is enrolled independently and
     // cannot roll it back, delay it, or change the toast the user sees.
-    emitByPolicy(recipeEmitter, viewPolicy, ctx, "imported", {
-      recipe: dashboardDto,
-      pendingRecipeId: recipeId,
-      toast: "imported",
-    });
+    void recipes.publish(
+      "imported",
+      {
+        recipe: dashboardDto,
+        pendingRecipeId: recipeId,
+        toast: "imported",
+      },
+      { viewPolicy: viewPolicy, ...ctx }
+    );
   }
 
   await announceUsableRecipe(created, { userId, householdKey, householdUserIds });
@@ -167,13 +173,17 @@ async function handleJobFailed(
   if (isFinalFailure) {
     // Emit failed event to remove skeleton
     const policy = await getRecipePermissionPolicy();
-    const ctx: PolicyEmitContext = { userId, householdKey };
+    const ctx = { userId, householdKey };
 
-    emitByPolicy(recipeEmitter, policy.view, ctx, "failed", {
-      reason: error.message || "Failed to import recipe after multiple attempts",
-      recipeId,
-      url,
-    });
+    void recipes.publish(
+      "failed",
+      {
+        reason: error.message || "Failed to import recipe after multiple attempts",
+        recipeId,
+        url,
+      },
+      { viewPolicy: policy.view, ...ctx }
+    );
   }
 }
 

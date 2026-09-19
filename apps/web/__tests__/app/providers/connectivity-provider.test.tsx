@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 import { ConnectivityProvider, useConnectivity } from "@/app/providers/connectivity-provider";
 
 const probeMock = vi.hoisted(() => vi.fn<() => Promise<boolean>>());
-let wsStatus: "idle" | "connecting" | "connected" | "disconnected" = "idle";
+let wsStatus: "idle" | "connected" | "disconnected" = "idle";
 
 vi.mock("@/app/providers/trpc-provider", () => ({
   useConnectionStatus: () => ({ status: wsStatus, isConnected: wsStatus === "connected" }),

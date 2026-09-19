@@ -8,12 +8,13 @@ import {
   createTestQueryClient,
   createTestWrapper,
 } from "./test-utils";
+import { trackedEvent } from "../realtime-test-utils";
 
 // Track subscription callbacks
 const subscriptionCallbacks: Record<string, (data: unknown) => void> = {};
 
 function emitPayload(payload: unknown) {
-  return payload;
+  return trackedEvent(payload);
 }
 
 vi.mock("@trpc/tanstack-react-query", () => ({

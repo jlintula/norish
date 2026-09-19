@@ -9,6 +9,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MATCH_RETRY_WINDOW_MS } from "@norish/queue/store-lookup/producer";
 
 import { noticeGroceries, priceTheList } from "../../src/routers/stores/pricing";
+import { stores } from "../mocks/realtime/stores";
 
 const storeProductsRepository = vi.hoisted(() => ({
   resolveProductLinks: vi.fn(),
@@ -18,13 +19,12 @@ const storeProductsRepository = vi.hoisted(() => ({
 const storesRepository = vi.hoisted(() => ({ listStoresByUserIds: vi.fn() }));
 const groceriesRepository = vi.hoisted(() => ({ listGroceriesByUsers: vi.fn(async () => []) }));
 const queue = vi.hoisted(() => ({ add: vi.fn(async () => undefined) }));
-const storeEmitter = vi.hoisted(() => ({ emitToHousehold: vi.fn() }));
 
 vi.mock("@norish/db/repositories/store-products", () => storeProductsRepository);
 vi.mock("@norish/db/repositories/stores", () => storesRepository);
 vi.mock("@norish/db/repositories/groceries", () => groceriesRepository);
 vi.mock("@norish/queue/registry", () => ({ getQueues: () => ({ storeLookup: queue }) }));
-vi.mock("@norish/shared-server/realtime/stores", () => ({ storeEmitter }));
+vi.mock("@norish/shared-server/realtime/stores", () => import("../mocks/realtime/stores"));
 vi.mock("@norish/shared-server/logger", () => ({
   trpcLogger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
   createLogger: () => ({ debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() }),
@@ -64,9 +64,13 @@ describe("asking a Store what a name means", () => {
     const pending = { storeId: STORE, normalizedName: "oude kaas", triedAt: null, product: null };
 
     expect(links).toEqual([pending]);
-    expect(storeEmitter.emitToHousehold).toHaveBeenCalledWith("household-1", "linkUpdated", {
-      link: pending,
-    });
+    expect(stores.publish).toHaveBeenCalledWith(
+      "linkUpdated",
+      {
+        link: pending,
+      },
+      { householdKey: "household-1" }
+    );
   });
 
   it("tells the household about a question the list view asked, and about nothing it already knew", async () => {
@@ -82,10 +86,10 @@ describe("asking a Store what a name means", () => {
     const pending = { storeId: STORE, normalizedName: "kaas", triedAt: null, product: null };
 
     expect(links).toEqual([miss, pending]);
-    expect(storeEmitter.emitToHousehold).toHaveBeenCalledExactlyOnceWith(
-      "household-1",
+    expect(stores.publish).toHaveBeenCalledExactlyOnceWith(
       "linkUpdated",
-      { link: pending }
+      { link: pending },
+      { householdKey: "household-1" }
     );
   });
 

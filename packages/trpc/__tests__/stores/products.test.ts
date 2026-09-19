@@ -15,6 +15,7 @@ import {
   createMockUser,
 } from "../calendar/test-utils";
 import { assertHouseholdAccess } from "../mocks/permissions";
+import { stores } from "../mocks/realtime/stores";
 
 const storeProductsRepository = vi.hoisted(() => ({
   createManualProduct: vi.fn(),
@@ -32,12 +33,10 @@ const storesRepository = vi.hoisted(() => ({
   getStoreOwnerId: vi.fn(),
 }));
 
-const storeEmitter = vi.hoisted(() => ({ emitToHousehold: vi.fn() }));
-
 vi.mock("@norish/db/repositories/store-products", () => storeProductsRepository);
 vi.mock("@norish/db/repositories/stores", () => storesRepository);
 vi.mock("@norish/auth/permissions", () => import("../mocks/permissions"));
-vi.mock("@norish/trpc/routers/stores/emitter", () => ({ storeEmitter }));
+vi.mock("@norish/shared-server/realtime/stores", () => import("../mocks/realtime/stores"));
 vi.mock("@norish/trpc/routers/stores/pricing", () => ({ priceTheList: vi.fn(async () => []) }));
 vi.mock("@norish/queue/store-lookup/lookup", () => ({
   searchStore: vi.fn(async () => ({ candidates: [], answered: true })),
@@ -184,10 +183,10 @@ describe("chooseProduct", () => {
       pageUrl: null,
     });
     expect(storeProductsRepository.createManualProduct).not.toHaveBeenCalled();
-    expect(storeEmitter.emitToHousehold).toHaveBeenCalledWith(
-      ctx.householdKey,
+    expect(stores.publish).toHaveBeenCalledWith(
       "productUpdated",
-      expect.objectContaining({ product: expect.objectContaining({ id: MANUAL_ID }) })
+      expect.objectContaining({ product: expect.objectContaining({ id: MANUAL_ID }) }),
+      { householdKey: ctx.householdKey }
     );
   });
 
@@ -213,10 +212,10 @@ describe("chooseProduct", () => {
       PRODUCT,
       pack
     );
-    expect(storeEmitter.emitToHousehold).toHaveBeenCalledWith(
-      ctx.householdKey,
+    expect(stores.publish).toHaveBeenCalledWith(
       "productUpdated",
-      expect.objectContaining({ product: expect.objectContaining({ id: PRODUCT }) })
+      expect.objectContaining({ product: expect.objectContaining({ id: PRODUCT }) }),
+      { householdKey: ctx.householdKey }
     );
     expect(storeProductsRepository.upsertProductLink).toHaveBeenCalledWith(
       STORE,

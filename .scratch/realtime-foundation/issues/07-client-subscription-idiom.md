@@ -12,13 +12,24 @@
 
 **Spec:** `.scratch/realtime-foundation/spec.md` § Client
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] `grep -rn "as any\|: any" packages/shared-react/src/hooks` has no hit in a subscription handler; `wrapTrpcProxy` and `unwrapPayload` do not exist
-- [ ] Every handler is `(payload, meta)`; `packages/shared-react/__tests__/realtime/use-realtime-subscription.test.tsx` (mocked `useSubscription`) proves a Cursor Mark never reaches `onEvent`, a `REALTIME_LAGGED` error invalidates exactly `lagQueryKeys` then calls `reset()`, a non-lag error does neither, and the subscription after `reset()` carries no `lastEventId`
-- [ ] Permissions: one subscription, filtered invalidation; CalDAV: one subscription, one toast per event; shares: one procedure; ratings: no blanket invalidate; no hand-written query keys
-- [ ] Dead web wrappers and their tests deleted
-- [ ] `apps/web/app/providers/trpc-provider.tsx` compiles without the normalized proxy; groceries, stores, recipes, cookbooks, calendar, households, CalDAV and archive flows checked in a browser
-- [ ] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
+- [x] `grep -rn "as any\|: any" packages/shared-react/src/hooks` has no hit in a subscription handler; `wrapTrpcProxy` and `unwrapPayload` do not exist
+- [x] Every handler is `(payload, meta)`; `packages/shared-react/__tests__/realtime/use-realtime-subscription.test.tsx` (mocked `useSubscription`) proves a Cursor Mark never reaches `onEvent`, a `REALTIME_LAGGED` error invalidates exactly `lagQueryKeys` then calls `reset()`, a non-lag error does neither, and the subscription after `reset()` carries no `lastEventId`
+- [x] Permissions: one subscription, filtered invalidation; CalDAV: one subscription, one toast per event; shares: one procedure; ratings: no blanket invalidate; no hand-written query keys
+- [x] Dead web wrappers and their tests deleted
+- [x] `apps/web/app/providers/trpc-provider.tsx` compiles without the normalized proxy; groceries, stores, recipes, cookbooks, calendar, households, CalDAV and archive flows checked in a browser
+- [x] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
 
 ## Comments
+
+- Implemented on `claude/realtime-foundation-tickets-8ercvt` together with 08.
+  - **What the transport hands the hook.** tRPC delivers a `tracked()` item to `onData` as `{ id, data }` (the cursor beside the item), not as the item itself — `packages/trpc/__tests__/ws-resume.test.ts` pins that shape. The hook unwraps it first, then skips the Cursor Mark and asserts the envelope; anything else is a `TypeError`. The 04–05 compatibility shim never accounted for this, which is one more reason it could not stay.
+  - `useRealtimeSubscription<P>(procedure, handlers)` lives in `packages/shared-react/src/realtime/` (exported as `@norish/shared-react/realtime`). `procedure` is a structural `RealtimeSubscriptionProcedure` (the router's decorated procedures satisfy it) and `P` is stated by the caller as `PayloadOf<Catalogue, Event>`; the one cast of the idiom is the `useSubscription(options as …)` inside the hook, documented there. `handlers.enabled` is passed straight through.
+  - `reset()` after a lag is synchronous inside `onError`, so an unmounted component can never leave a fresh subscription behind; the test proves the reset subscription asks for nothing (`input === undefined`): `lastEventId` is the link's alone.
+  - Lag reactions per domain: hooks that own a cache helper pass `onLag: invalidate` (groceries, stores, recipes, cookbooks, households, calendar, CalDAV); the rest pass `lagQueryKeys` (store aisles/prices, enrichment status, ratings, permissions). Archive import progress is not a query, so its lag only logs.
+  - Handler fixes: permissions invalidates `permissions.get`, `recipes.list` and `library.list` only (the Library is the same recipes in one list, ADR-0026); the recipe-detail hook no longer subscribes to `onPolicyUpdated`; CalDAV is one hook, `useCaldavSubscription`, with one toast per `initialSyncComplete` (`useCaldavItemStatusSubscription` and `useCaldavSyncCompleteSubscription` are gone from the package and the web wrapper); shares use `onShareEvent`; ratings keep `setQueriesData` and drop the blanket invalidate; the recipe dashboard's hand-written keys become `trpc.recipes.get.queryKey({ id })` and `trpc.calendar.listItems.queryKey()` — the old `[["calendar", "listRecipes"]]` named a procedure that does not exist, so that invalidation had never fired.
+  - `recipes/types.ts` loses its hand-typed `SubscriptionProceduresContract`; `TrpcHookBinding` is the raw context binding everywhere. Callback types (`RecipeSubscriptionCallbacks`, `RecipesSubscriptionCallbacks`, `RatingsSubscriptionCallbacks`) are typed from the catalogue, so the web wrapper `use-recipe-subscription.tsx` drops its casts.
+  - `operation-helpers.ts` keeps only the operationId helpers; the envelope predicates live in `contracts/realtime/envelope.ts` alone (its test already covered them).
+  - Tests: `packages/shared-react/__tests__/realtime/use-realtime-subscription.test.tsx` (real `useSubscription`, recorded `subscribe`); the deleted web tests' cache assertions live on in `packages/shared-react/__tests__/hooks/{recipes,ratings}-subscription.test.tsx`; the remaining web hook tests emit tracked envelopes through `apps/web/__tests__/hooks/realtime-test-utils.ts` (`trackedEvent`) at every emission site; no test speaks the retired `{ payload }` frame.
+  - The browser check of the flows is still open: this environment has no Docker daemon for Postgres, so it belongs to the release verification (ticket 10).

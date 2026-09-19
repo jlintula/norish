@@ -23,7 +23,7 @@ const mocks = vi.hoisted(() => ({
   resolveProductLink: vi.fn(),
   listStaleProducts: vi.fn(),
   noteProductUnreadable: vi.fn(),
-  emitToHousehold: vi.fn(),
+  publish: vi.fn(async () => undefined),
 }));
 
 vi.mock("@norish/db/repositories/stores", () => ({ getStoreById: mocks.getStoreById }));
@@ -36,7 +36,7 @@ vi.mock("@norish/db/repositories/store-products", () => ({
   noteProductUnreadable: mocks.noteProductUnreadable,
 }));
 vi.mock("@norish/shared-server/realtime/stores", () => ({
-  storeEmitter: { emitToHousehold: mocks.emitToHousehold },
+  stores: { publish: mocks.publish },
 }));
 
 const STORE = "11111111-1111-4111-8111-111111111111";
@@ -299,7 +299,7 @@ describe("matchGroceryName", () => {
 
     expect(result).toEqual({ matched: false });
     expect(mocks.linkIfUnanswered).not.toHaveBeenCalled();
-    expect(mocks.emitToHousehold).not.toHaveBeenCalled();
+    expect(mocks.publish).not.toHaveBeenCalled();
     // The Pending Link the producer wrote goes with it: the name is unknown
     // again, rather than "being asked" for ever.
     expect(mocks.clearPendingLink).toHaveBeenCalledExactlyOnceWith(STORE, "oude kaas");
@@ -360,7 +360,7 @@ describe("matchGroceryName", () => {
     expect(result).toEqual({ matched: false });
     expect(mocks.linkIfUnanswered).toHaveBeenCalledExactlyOnceWith(STORE, "oude kaas", "product-1");
     // Whatever the link now says is what the household hears.
-    expect(mocks.emitToHousehold).toHaveBeenCalledWith(HOUSEHOLD, "linkUpdated", expect.anything());
+    expect(mocks.publish).toHaveBeenCalledWith("linkUpdated", expect.anything(), { householdKey: HOUSEHOLD });
   });
 
   it("writes a Miss only where nobody has answered", async () => {
@@ -410,12 +410,8 @@ describe("matchGroceryName", () => {
 
     await matchGroceryName({ storeId: STORE, name: "oude kaas", householdKey: HOUSEHOLD });
 
-    expect(mocks.emitToHousehold).toHaveBeenCalledWith(
-      HOUSEHOLD,
-      "productUpdated",
-      expect.objectContaining({ product: expect.objectContaining({ id: "product-1" }) })
-    );
-    expect(mocks.emitToHousehold).toHaveBeenCalledWith(HOUSEHOLD, "linkUpdated", expect.anything());
+    expect(mocks.publish).toHaveBeenCalledWith("productUpdated", expect.objectContaining({ product: expect.objectContaining({ id: "product-1" }) }), { householdKey: HOUSEHOLD });
+    expect(mocks.publish).toHaveBeenCalledWith("linkUpdated", expect.anything(), { householdKey: HOUSEHOLD });
   });
 });
 

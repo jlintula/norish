@@ -1,6 +1,5 @@
 "use client";
 
-import type { OutboxMutationClient } from "@/lib/outbox";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { useConnectivity } from "@/app/providers/connectivity-provider";
@@ -46,7 +45,7 @@ export function OfflineCacheController({ children }: { children: ReactNode }) {
       createRecovery({
         store: outboxStore,
         owner: cacheManager.owner,
-        submit: (entry) => replayOutboxEntry(trpcClient as OutboxMutationClient, entry),
+        submit: (entry) => replayOutboxEntry(trpcClient, entry),
         verifySession: async (ownerId) => {
           try {
             const session = await getSession();

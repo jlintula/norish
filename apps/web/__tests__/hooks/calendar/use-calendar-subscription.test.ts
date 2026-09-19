@@ -3,6 +3,7 @@ import { useCalendarSubscription } from "@/hooks/calendar/use-calendar-subscript
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { trackedEvent } from "../realtime-test-utils";
 import { createTestQueryClient, createTestWrapper } from "./test-utils";
 
 type SubscriptionCallback = (data: unknown) => void;
@@ -128,8 +129,8 @@ describe("useCalendarSubscription", () => {
 
       expect(callback).toBeDefined();
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "new-item-1",
             userId: "user-1",
@@ -145,8 +146,8 @@ describe("useCalendarSubscription", () => {
             calories: 300,
             version: 3,
           },
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -169,8 +170,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemCreated"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "existing-1",
             userId: "user-1",
@@ -186,8 +187,8 @@ describe("useCalendarSubscription", () => {
             calories: 500,
             version: 2,
           },
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -213,8 +214,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemCreated"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "item-3",
             userId: "user-1",
@@ -230,8 +231,8 @@ describe("useCalendarSubscription", () => {
             calories: null,
             version: 4,
           },
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -248,8 +249,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemCreated"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "tomorrow-item",
             userId: "user-1",
@@ -265,8 +266,8 @@ describe("useCalendarSubscription", () => {
             calories: 300,
             version: 1,
           },
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -286,7 +287,7 @@ describe("useCalendarSubscription", () => {
 
       expect(callback).toBeDefined();
 
-      callback({ payload: { itemId: "item-1", date: "2025-01-15", slot: "Breakfast" } });
+      callback(trackedEvent({ itemId: "item-1", date: "2025-01-15", slot: "Breakfast" }));
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -311,8 +312,8 @@ describe("useCalendarSubscription", () => {
 
       expect(callback).toBeDefined();
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "moved-item",
             userId: "user-1",
@@ -333,8 +334,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-01-15",
           oldSlot: "Breakfast",
           oldSortOrder: 0,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -358,8 +359,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemMoved"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "item-3",
             userId: "user-1",
@@ -384,8 +385,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-01-15",
           oldSlot: "Breakfast",
           oldSortOrder: 2,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -411,8 +412,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemMoved"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "b-1",
             userId: "user-1",
@@ -436,8 +437,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-01-15",
           oldSlot: "Breakfast",
           oldSortOrder: 0,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -469,8 +470,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemMoved"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "item-2",
             userId: "user-1",
@@ -494,8 +495,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-01-15",
           oldSlot: "Breakfast",
           oldSortOrder: 1,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
       const sorted = [...data!].sort((a, b) => a.sortOrder - b.sortOrder);
@@ -510,8 +511,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemMoved"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "moved-into-range",
             userId: "user-1",
@@ -532,8 +533,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-02-01",
           oldSlot: "Dinner",
           oldSortOrder: 0,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -556,8 +557,8 @@ describe("useCalendarSubscription", () => {
 
       const callback = subscriptionCallbacks["onItemMoved"];
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "moved-out-of-range",
             userId: "user-1",
@@ -578,8 +579,8 @@ describe("useCalendarSubscription", () => {
           oldDate: "2025-01-20",
           oldSlot: "Breakfast",
           oldSortOrder: 0,
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -598,8 +599,8 @@ describe("useCalendarSubscription", () => {
 
       expect(callback).toBeDefined();
 
-      callback({
-        payload: {
+      callback(
+        trackedEvent({
           item: {
             id: "updated-item",
             userId: "user-1",
@@ -615,8 +616,8 @@ describe("useCalendarSubscription", () => {
             calories: null,
             version: 2,
           },
-        },
-      });
+        })
+      );
 
       const data = queryClient.getQueryData<PlannedItemFromQuery[]>(getQueryKey());
 
@@ -640,7 +641,7 @@ describe("useCalendarSubscription", () => {
 
       expect(callback).toBeDefined();
 
-      callback({ payload: { reason: "Something went wrong" } });
+      callback(trackedEvent({ reason: "Something went wrong" }));
 
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: getQueryKey(),

@@ -30,10 +30,10 @@ import {
   isImageGenerationConfigured,
 } from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
+import { permissions } from "@norish/shared-server/realtime/permissions";
 
 import { adminProcedure } from "../../middleware";
 import { router } from "../../trpc";
-import { permissionsEmitter } from "../permissions/emitter";
 
 type ListedModel = {
   id: string;
@@ -122,7 +122,7 @@ const updateAIConfig = adminProcedure.input(AIConfigSchema).mutation(async ({ in
     log.info({ enabled: input.enabled }, "AI enabled state changed, broadcasting policy update");
     const recipePolicy = await getRecipePermissionPolicy();
 
-    permissionsEmitter.broadcast("policyUpdated", { recipePolicy });
+    void permissions.publish("policyUpdated", { recipePolicy }, undefined);
   }
 
   return { success: true };

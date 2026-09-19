@@ -6,16 +6,18 @@
 
 **Spec:** `.scratch/realtime-foundation/spec.md` § Redis client
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] `getPublisherClient`, `createSubscriberClient` and `closeRedisConnections` read and write `globalThis` only; no module-local copy of the client or the promise
-- [ ] Publisher and subscriber options include `retryStrategy`, `keepAlive`, `connectTimeout`; a test pins the 5 s cap and that the strategy never returns `null`
-- [ ] `parseRedisUrl` handles `redis://user:pass@host:6379/2` and `rediss://host` (TLS) and is imported by `bullmq.ts`; no other `new URL(` under `packages/*/src/redis/`
-- [ ] `packages/queue/src/redis/` contains only `bullmq.ts`; the package export is gone
-- [ ] `packages/queue/__tests__/redis/connection-singletons.test.ts` → `packages/shared-server/__tests__/redis/client.test.ts`, green against the live module
-- [ ] `packages/queue/__tests__/redis/channel-metadata.test.ts` → `packages/shared-server/__tests__/redis/channel-metadata.test.ts` (rewritten again in 03 when the codec replaces it)
-- [ ] New `packages/shared-server/__tests__/redis/url.test.ts`
-- [ ] Banner prints `WS:   ws://${hostname}:${port}/trpc`
-- [ ] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
+- [x] `getPublisherClient`, `createSubscriberClient` and `closeRedisConnections` read and write `globalThis` only; no module-local copy of the client or the promise
+- [x] Publisher and subscriber options include `retryStrategy`, `keepAlive`, `connectTimeout`; a test pins the 5 s cap and that the strategy never returns `null`
+- [x] `parseRedisUrl` handles `redis://user:pass@host:6379/2` and `rediss://host` (TLS) and is imported by `bullmq.ts`; no other `new URL(` under `packages/*/src/redis/`
+- [x] `packages/queue/src/redis/` contains only `bullmq.ts`; the package export is gone
+- [x] `packages/queue/__tests__/redis/connection-singletons.test.ts` → `packages/shared-server/__tests__/redis/client.test.ts`, green against the live module
+- [x] `packages/queue/__tests__/redis/channel-metadata.test.ts` → `packages/shared-server/__tests__/redis/channel-metadata.test.ts` (rewritten again in 03 when the codec replaces it)
+- [x] New `packages/shared-server/__tests__/redis/url.test.ts`
+- [x] Banner prints `WS:   ws://${hostname}:${port}/trpc`
+- [x] `pnpm lint`, `pnpm test:run`, `pnpm i18n:check`, `pnpm build` green
 
 ## Comments
+
+- Implemented on `claude/realtime-foundation-scratch-enjqqw`. `connection-singletons.test.ts` split along package lines: the publisher half became `packages/shared-server/__tests__/redis/client.test.ts` (plus the retry-strategy and connection-option pins); the BullMQ half stayed in the queue package as `packages/queue/__tests__/redis/bullmq.test.ts`, since shared-server cannot import `@norish/queue`. `retryStrategy` is `min(1000 · 2^(times−1), 5000)` and is exported as `redisRetryStrategy` so the test pins it directly. `client.ts` builds its options from `parseRedisUrl` too, so `rediss://` and a database index now work for pub/sub as well as BullMQ.
