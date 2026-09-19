@@ -9,9 +9,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { adaptLegacyFrame } from "../realtime-test-utils";
+import { trackedEvent } from "../realtime-test-utils";
 
-type Callback = (data: { payload: unknown }) => void;
+type Callback = (data: unknown) => void;
 
 const callbacks: Record<string, Callback> = {};
 
@@ -25,7 +25,7 @@ const LINKS_KEY = [["stores", "aisleLinks"], { type: "query" }];
 function subscription(name: string) {
   return {
     subscriptionOptions: (_input: unknown, options: { onData: (data: unknown) => void }) => {
-      callbacks[name] = adaptLegacyFrame(options.onData);
+      callbacks[name] = options.onData;
 
       return { queryKey: [name] };
     },
@@ -88,9 +88,11 @@ describe("useStoresSubscription, and what a Store's aisles take with them", () =
 
   it("drops the links of an aisle the Store no longer has, and reads the links again", () => {
     act(() => {
-      callbacks.onUpdated?.({
-        payload: { store: { ...MARKT_STORE, version: 2, aisles: [aisle(ZUIVEL, "Zuivel", 0)] } },
-      });
+      callbacks.onUpdated?.(
+        trackedEvent({
+          store: { ...MARKT_STORE, version: 2, aisles: [aisle(ZUIVEL, "Zuivel", 0)] },
+        })
+      );
     });
 
     expect(client.getQueryData(LINKS_KEY)).toEqual([
@@ -105,14 +107,14 @@ describe("useStoresSubscription, and what a Store's aisles take with them", () =
 
   it("keeps every link of a Store whose aisles were only renamed", () => {
     act(() => {
-      callbacks.onUpdated?.({
-        payload: {
+      callbacks.onUpdated?.(
+        trackedEvent({
           store: {
             ...MARKT_STORE,
             aisles: [aisle(ZUIVEL, "Zuivel en kaas", 0), aisle(BROOD, "Brood", 1)],
           },
-        },
-      });
+        })
+      );
     });
 
     expect(client.getQueryData(LINKS_KEY)).toEqual(LINKS);
@@ -120,7 +122,7 @@ describe("useStoresSubscription, and what a Store's aisles take with them", () =
 
   it("drops every link of a Store that was deleted", () => {
     act(() => {
-      callbacks.onDeleted?.({ payload: { storeId: MARKT, deletedGroceryIds: [] } });
+      callbacks.onDeleted?.(trackedEvent({ storeId: MARKT, deletedGroceryIds: [] }));
     });
 
     expect(client.getQueryData(LINKS_KEY)).toEqual([

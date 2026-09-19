@@ -24,13 +24,3 @@ export function realtimeEnvelope<P>(payload: P, eventName = "event"): RealtimeEv
 export function trackedEvent<P>(payload: P, eventName?: string) {
   return { id: "1.abcdef01.1700000000000-0", data: realtimeEnvelope(payload, eventName) };
 }
-
-/**
- * Adapt a test that still emits the pre-idiom `{ payload }` frame to a handler
- * that expects the tracked envelope.
- */
-export function adaptLegacyFrame<T extends { payload: unknown }>(
-  onData: ((data: unknown) => void) | undefined
-): (frame: T) => void {
-  return (frame) => onData?.(trackedEvent(frame.payload));
-}
