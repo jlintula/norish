@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 title: Admin settings
 description: Runtime settings server owners and admins can manage from the Norish UI.
 ---

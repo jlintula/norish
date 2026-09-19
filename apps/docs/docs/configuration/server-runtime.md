@@ -20,6 +20,10 @@ General settings for the Norish server process. Most have sensible defaults;
 | `PORT`       | Server port                                  | `3000`                                 |
 | `REDIS_URL`  | Redis connection URL for events and jobs     | `redis://localhost:6379`               |
 
+Realtime events travel over a WebSocket on the same port; see
+[WebSocket & realtime](./websocket.md) for the endpoint, the reverse-proxy
+settings, and what Norish keeps in Redis.
+
 :::info Generate a `MASTER_KEY`
 `MASTER_KEY` derives the encryption keys used to protect stored secrets. Generate
 a strong one and keep it stable — changing it invalidates previously encrypted
@@ -39,6 +43,11 @@ openssl rand -base64 32
 
 `TRUSTED_ORIGINS` is useful when Norish is reached from more than one origin, for
 example `http://192.168.1.100:3000,https://norish.example.com`.
+
+The same list is checked on every WebSocket upgrade: a browser whose `Origin`
+is neither `AUTH_URL`, an entry here, nor the request host is refused. If your
+reverse proxy rewrites `Origin`, list the public origin here — see
+[WebSocket & realtime](./websocket.md#the-origin-check).
 
 ## Auth rate limiting
 

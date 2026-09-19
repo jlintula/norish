@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 title: Users
 description: List everyone with an account on your server, hand out admin access, and remove accounts.
 ---
