@@ -329,6 +329,10 @@ async function decideProvenance(
     for (const [id] of batch) {
       const answer = answers[id];
 
+      // The ids are the batch's own, and `decide` has already refused a
+      // reply missing any of them; this only tells the types so.
+      if (!answer) continue;
+
       if (answer.type === "choice") {
         // The runtime has already refused a distribution without the chosen
         // entry; a missing probability here is "not sure", never "settled".
