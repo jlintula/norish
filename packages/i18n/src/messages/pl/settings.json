@@ -737,7 +737,6 @@
       "fallbackHint": "Ten sam dostawca co w konfiguracji AI: endpoint i klucz API są z niej przejmowane, chyba że ustawisz je tutaj."
     },
     "decisionConfig": {
-      "description": "Model decyzyjny odpowiada na pytania zamknięte — czy to śniadanie, czy zawiera orzeszki ziemne, który z tych produktów jest tym z listy — znacznie szybciej i taniej niż model językowy, z uczciwą miarą tego, jak jest pewny. Jest opcjonalny: każda funkcja działa dalej bez niego i nigdy nie zastępuje dostawcy AI powyżej.",
       "provider": "Dostawca decyzji",
       "providers": {
         "disabled": "Wyłączone",
@@ -747,12 +746,7 @@
       "apiKeyPlaceholder": "Wprowadź klucz API...",
       "apiKeyDescription": "Klucz uzyskasz na swoim koncie w typesafe.ai",
       "model": "Model decyzyjny",
-      "modelDescription": "jev-latest podąża za najnowszym wydaniem TypeSafe. Zostaw puste, aby go użyć.",
-      "advanced": "Zaawansowane",
-      "endpoint": "Adres URL endpointu",
-      "endpointDescription": "Dla proxy lub bramki; w przeciwnym razie zostaw puste.",
       "uses": "Używaj modelu decyzyjnego do",
-      "usesDescription": "Wszystko jest zaznaczone, gdy tylko model decyzyjny zostanie skonfigurowany; odznacz to, co ma zostawić dostawcy AI. Triage importów zawsze używa modelu decyzyjnego i nie ma go na liście.",
       "usesPlaceholder": "Nic",
       "useNames": {
         "autoCategorization": "Automatyczna kategoryzacja",

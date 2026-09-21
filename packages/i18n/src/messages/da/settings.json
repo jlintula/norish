@@ -737,7 +737,6 @@
       "fallbackHint": "Samme udbyder som din AI-konfiguration: endpoint og API-nøgle falder tilbage til den, medmindre du angiver dem her."
     },
     "decisionConfig": {
-      "description": "Beslutningsmodellen besvarer lukkede spørgsmål — er dette en morgenmad, indeholder den jordnødder, hvilket af disse produkter er varen — langt hurtigere og billigere end en sprogmodel og med et ærligt mål for, hvor sikker den er. Den er valgfri: alle funktioner fungerer fortsat uden den, og den erstatter aldrig AI-udbyderen ovenfor.",
       "provider": "Beslutningsudbyder",
       "providers": {
         "disabled": "Deaktiveret",
@@ -747,12 +746,7 @@
       "apiKeyPlaceholder": "Indtast API-nøgle...",
       "apiKeyDescription": "Hent en nøgle fra din konto på typesafe.ai",
       "model": "Beslutningsmodel",
-      "modelDescription": "jev-latest følger TypeSafes nyeste udgivelse. Lad feltet stå tomt for at bruge den.",
-      "advanced": "Avanceret",
-      "endpoint": "Endpoint-URL",
-      "endpointDescription": "Til en proxy eller gateway; lad ellers feltet stå tomt.",
       "uses": "Brug beslutningsmodellen til",
-      "usesDescription": "Alt er valgt, så snart en beslutningsmodel er sat op; fravælg det, den skal overlade til AI-udbyderen. Importtriage bruger altid beslutningsmodellen og er ikke på listen.",
       "usesPlaceholder": "Intet",
       "useNames": {
         "autoCategorization": "Automatisk kategorisering",

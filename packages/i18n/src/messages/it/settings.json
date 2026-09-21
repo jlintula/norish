@@ -737,7 +737,6 @@
       "fallbackHint": "Stesso provider della configurazione IA: endpoint e chiave API vengono ripresi da lì se non li imposti qui."
     },
     "decisionConfig": {
-      "description": "Il modello decisionale risponde a domande chiuse — è una colazione, contiene arachidi, quale di questi prodotti è la spesa — molto più velocemente e a minor costo di un modello linguistico, con una misura onesta di quanto è sicuro. È facoltativo: ogni funzione continua a funzionare senza, e non sostituisce mai il provider AI qui sopra.",
       "provider": "Provider decisionale",
       "providers": {
         "disabled": "Disattivato",
@@ -747,12 +746,7 @@
       "apiKeyPlaceholder": "Inserisci la chiave API...",
       "apiKeyDescription": "Ottieni una chiave dal tuo account su typesafe.ai",
       "model": "Modello decisionale",
-      "modelDescription": "jev-latest segue la versione più recente di TypeSafe. Lascia vuoto per usarla.",
-      "advanced": "Avanzate",
-      "endpoint": "URL endpoint",
-      "endpointDescription": "Per un proxy o un gateway; altrimenti lascia vuoto.",
       "uses": "Usa il modello decisionale per",
-      "usesDescription": "Tutto è selezionato non appena un modello decisionale è configurato; deseleziona ciò che deve lasciare al provider AI. Il triage delle importazioni usa sempre il modello decisionale e non è nell'elenco.",
       "usesPlaceholder": "Niente",
       "useNames": {
         "autoCategorization": "Categorizzazione automatica",

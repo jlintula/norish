@@ -737,7 +737,6 @@
       "fallbackHint": "Gleicher Anbieter wie deine KI-Konfiguration: Endpoint und API-Schlüssel werden von dort übernommen, sofern du sie hier nicht setzt."
     },
     "decisionConfig": {
-      "description": "Das Entscheidungsmodell beantwortet geschlossene Fragen — ist das ein Frühstück, enthält es Erdnüsse, welches dieser Produkte ist der Einkauf — viel schneller und günstiger als ein Sprachmodell und mit einem ehrlichen Maß dafür, wie sicher es ist. Es ist optional: Jede Funktion arbeitet auch ohne weiter, und es ersetzt nie den KI-Anbieter oben.",
       "provider": "Entscheidungsanbieter",
       "providers": {
         "disabled": "Deaktiviert",
@@ -747,12 +746,7 @@
       "apiKeyPlaceholder": "API-Schlüssel eingeben...",
       "apiKeyDescription": "Einen Schlüssel bekommst du in deinem Konto auf typesafe.ai",
       "model": "Entscheidungsmodell",
-      "modelDescription": "jev-latest folgt der neuesten Version von TypeSafe. Leer lassen, um sie zu verwenden.",
-      "advanced": "Erweitert",
-      "endpoint": "Endpoint-URL",
-      "endpointDescription": "Für einen Proxy oder ein Gateway; ansonsten leer lassen.",
       "uses": "Entscheidungsmodell verwenden für",
-      "usesDescription": "Sobald ein Entscheidungsmodell konfiguriert ist, ist alles ausgewählt; wähle ab, was dem KI-Anbieter überlassen bleiben soll. Die Import-Triage nutzt das Entscheidungsmodell immer und steht nicht in der Liste.",
       "usesPlaceholder": "Nichts",
       "useNames": {
         "autoCategorization": "Automatische Kategorisierung",

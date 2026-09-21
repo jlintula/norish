@@ -207,6 +207,8 @@ which images were generated.
 
 ### Decision Model
 
+![Decision Model settings](/img/screenshots/admin-decision-model.png)
+
 The Decision Model is a second, optional AI provider that answers **closed
 questions** and generates nothing. Given a recipe or a page and a set of named
 questions, it answers every question in one request with a pick and a real
@@ -227,8 +229,7 @@ Configure it under **Settings => Admin => AI & Processing => Decision Model**:
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Provider**                   | _Disabled_ or _TypeSafe AI_                                                                                                                                                                                                                                                            |
 | **API Key**                    | From your TypeSafe AI account. The block always carries its own key; nothing is borrowed from the AI provider                                                                                                                                                                          |
-| **Model**                      | Defaults to `jev-latest`, which follows TypeSafe's newest release                                                                                                                                                                                                                      |
-| **Endpoint** (advanced)        | TypeSafe's base URL, for a proxy or gateway                                                                                                                                                                                                                                            |
+| **Model**                      | Prefilled with `jev-latest`, which follows TypeSafe's newest release                                                                                                                                                                                                                   |
 | **Use the Decision Model for** | One multi-select: _Auto-categorization_, _Allergy detection_, _Recipe Provenance_, _Grocery linking_, _Validate enrichments_. **Everything is selected** the moment a Decision Model is configured; deselect what it should leave to the AI provider. Import triage is not in the list |
 
 **Test** sends one trivial question with the settings as typed and reports

@@ -737,7 +737,6 @@
       "fallbackHint": "Same provider as your AI configuration: the endpoint and API key fall back to it unless you set them here."
     },
     "decisionConfig": {
-      "description": "The Decision Model answers closed questions — is this a breakfast, does it contain peanuts, which of these products is the grocery — much faster and cheaper than a language model, and with an honest measure of how sure it is. It is optional: every feature keeps working without one, and it never replaces the AI provider above.",
       "provider": "Decision Provider",
       "providers": {
         "disabled": "Disabled",
@@ -747,12 +746,7 @@
       "apiKeyPlaceholder": "Enter API key...",
       "apiKeyDescription": "Get a key from your account at typesafe.ai",
       "model": "Decision Model",
-      "modelDescription": "jev-latest follows TypeSafe's newest release. Leave empty to use it.",
-      "advanced": "Advanced",
-      "endpoint": "Endpoint URL",
-      "endpointDescription": "For a proxy or gateway; leave empty otherwise.",
       "uses": "Use the Decision Model for",
-      "usesDescription": "Everything is selected once a Decision Model is configured; deselect what it should leave to the AI provider. Import triage always uses the Decision Model and is not in the list.",
       "usesPlaceholder": "Nothing",
       "useNames": {
         "autoCategorization": "Auto-Categorization",
