@@ -90,6 +90,7 @@ export default function RecipePageMobile() {
             aspectRatio="4/3"
             chromeClassName={RECIPE_HERO_CHROME_OFFSET_CLASS}
             className="h-full rounded-none shadow-none"
+            expandControlSlot="topLeft"
             recipe={recipe}
             rounded={false}
             showAuthorFallback={false}

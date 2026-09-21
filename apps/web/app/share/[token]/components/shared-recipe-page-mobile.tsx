@@ -41,6 +41,7 @@ export function SharedRecipePageMobile() {
           aspectRatio="4/3"
           chromeClassName="mt-2"
           className="h-full rounded-none shadow-none"
+          expandControlSlot="topLeft"
           recipe={recipe}
           rounded={false}
           showAuthorFallback={false}
