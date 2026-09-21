@@ -198,11 +198,3 @@ function getDisplayName(name: string | null): string {
       .trim() || "Unknown item"
   );
 }
-
-export function hasGroupableItems(groceries: GroceryDto[], storeId: string | null): boolean {
-  const storeGroceries = groceries.filter((g) => g.storeId === storeId);
-  const names = storeGroceries.map((g) => normalizeIngredientNameForGrouping(g.name));
-  const uniqueNames = new Set(names.filter((n) => n !== ""));
-
-  return uniqueNames.size < storeGroceries.length;
-}
