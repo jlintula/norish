@@ -898,6 +898,7 @@
           "finished": "Finished",
           "duration": "Duration",
           "attempts": "Attempts",
+          "models": "Models",
           "runsAt": "Runs at",
           "nextRun": "Next run"
         },

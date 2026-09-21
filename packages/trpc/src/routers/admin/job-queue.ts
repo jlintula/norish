@@ -7,6 +7,7 @@ import type { JobStepEvent } from "@norish/queue/job-steps";
 import type {
   AdminJobAttemptDTO,
   AdminJobDetailDTO,
+  AdminJobModelDTO,
   AdminJobRowDTO,
   AdminJobState,
   AdminJobStepDTO,
@@ -256,6 +257,28 @@ function groupLogsByAttempt(logs: string[]): Map<number, string[]> {
   return byAttempt;
 }
 
+/**
+ * The models the job used, from the latest attempt that asked one: each
+ * provider, model and outcome once, in the order first asked, so a Decision
+ * that failed and the language model that answered instead both show.
+ */
+function deriveModels(progress: unknown): AdminJobModelDTO[] {
+  const attempts = readStepProgress(progress)?.attempts ?? [];
+  const latest = [...attempts].reverse().find((entry) => (entry.models?.length ?? 0) > 0);
+  const seen = new Set<string>();
+  const models: AdminJobModelDTO[] = [];
+
+  for (const { provider, model, outcome } of latest?.models ?? []) {
+    const key = `${provider}\u0000${model}\u0000${outcome}`;
+
+    if (seen.has(key)) continue;
+    seen.add(key);
+    models.push({ provider, model, outcome });
+  }
+
+  return models;
+}
+
 function toRowDTO(queueName: QueueName, job: Job, state: AdminJobState): AdminJobRowDTO {
   const now = Date.now();
   const processedOn = job.processedOn ?? null;
@@ -394,6 +417,7 @@ const detail = adminProcedure
       failedReason: fullFailedReason,
       dataJson: safeStringify(job.data),
       returnValueJson: job.returnvalue == null ? null : safeStringify(job.returnvalue),
+      models: deriveModels(job.progress),
       attempts: deriveAttempts({
         queue: input.queue,
         progress: job.progress,

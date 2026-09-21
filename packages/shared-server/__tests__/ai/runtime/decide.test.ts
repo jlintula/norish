@@ -39,6 +39,8 @@ vi.mock("@norish/shared-server/logger", () => ({
 const { decide, testDecisionModel } = await import("@norish/shared-server/ai/runtime/runtime");
 const { AIConfigurationError, AIDisabledError, AIProviderError, AIResponseError } =
   await import("@norish/shared-server/ai/runtime/errors");
+const { createModelUseLedger, runWithModelUseLedger } =
+  await import("@norish/shared-server/ai/runtime/model-use-ledger");
 
 interface CapturedRequest {
   method: string;
@@ -328,6 +330,31 @@ describe("decide", () => {
     const infoPayloads = JSON.stringify(logger.info.mock.calls.map(([fields]) => fields));
 
     expect(infoPayloads).not.toContain("Lentil stew");
+  });
+});
+
+describe("the job's model ledger", () => {
+  it("records the resolved model that answered, and the configured one that failed", async () => {
+    const ledger = createModelUseLedger();
+
+    await runWithModelUseLedger(ledger, ask);
+
+    reply = () => ({ status: 401, body: { message: "invalid api key" } });
+    await runWithModelUseLedger(ledger, () => ask().catch(() => undefined));
+
+    expect(ledger.uses).toEqual([
+      { provider: "typesafe", model: "jev-2026-09-01", outcome: "completed" },
+      { provider: "typesafe", model: "jev-latest", outcome: "failed" },
+    ]);
+  });
+
+  it("records nothing for a refusal that sent no request", async () => {
+    const ledger = createModelUseLedger();
+
+    mockGetDecisionConfig.mockResolvedValue(null);
+    await runWithModelUseLedger(ledger, () => ask().catch(() => undefined));
+
+    expect(ledger.uses).toEqual([]);
   });
 });
 

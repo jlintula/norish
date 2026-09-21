@@ -64,6 +64,7 @@ import {
   isRequestShapeRejection,
   toAIError,
 } from "./errors";
+import { recordModelUse } from "./model-use-ledger";
 import {
   canDegradeToJsonMode,
   createDecisionModelFromConfig,
@@ -248,7 +249,7 @@ async function requestObject<T>({
     {
       feature: promptName,
       provider: providerName,
-      model: useVision ? (config.visionModel ?? config.model) : config.model,
+      model: selectedModelId(config, useVision),
       inputTokens: result.usage?.inputTokens ?? 0,
       outputTokens: result.usage?.outputTokens ?? 0,
       totalTokens: result.usage?.totalTokens ?? 0,
@@ -300,7 +301,40 @@ export async function generateStructured<T>(options: GenerateOptions<T>): Promis
   const basePrompt = await loadPrompt(promptName);
   const filled = fill ? fillPrompt(basePrompt, fill) : basePrompt;
   const prompt = [filled, ...sections].join("\n\n");
-  const request = { config, promptName, prompt, schema, images };
+  const use = { provider: config.provider, model: selectedModelId(config, images.length > 0) };
+
+  // A configuration that cannot build a client is refused here, before the
+  // ledger: a missing key is not a request that failed, it is one never sent.
+  createModelsFromConfig(config, { structuredOutputs: true });
+
+  // One ledger entry per request a feature made, whichever request shape
+  // ended up answering it.
+  try {
+    const output = await requestStructured({ config, promptName, prompt, schema, images });
+
+    recordModelUse({ ...use, outcome: "completed" });
+
+    return output;
+  } catch (error) {
+    recordModelUse({ ...use, outcome: "failed" });
+    throw error;
+  }
+}
+
+/** The model a structured request runs on: the vision model when images ride along. */
+function selectedModelId(config: AIConfig, useVision: boolean): string {
+  return useVision ? (config.visionModel ?? config.model) : config.model;
+}
+
+/** The structured request itself: a strict schema first, a plain-JSON retry where that helps (#538). */
+async function requestStructured<T>(request: {
+  config: AIConfig;
+  promptName: StructuredPromptName;
+  prompt: string;
+  schema: z.ZodType<T>;
+  images: readonly AIImage[];
+}): Promise<T> {
+  const { config, promptName } = request;
 
   try {
     return await requestObject({ ...request, jsonMode: false });
@@ -410,12 +444,14 @@ export async function transcribe(audioPath: string): Promise<string> {
       { provider, model, transcriptLength: transcript.length },
       "Transcription completed"
     );
+    recordModelUse({ provider, model, outcome: "completed" });
 
     return transcript;
   } catch (error) {
     const aiError = toAIError(error);
 
     aiLogger.error({ err: error, provider, retryable: aiError.retryable }, "Transcription failed");
+    recordModelUse({ provider, model, outcome: "failed" });
 
     throw aiError;
   }
@@ -592,6 +628,7 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
       },
       "Image generation completed"
     );
+    recordModelUse({ provider, model, outcome: "completed" });
 
     return { bytes, mediaType: result.image.mediaType };
   } catch (error) {
@@ -601,6 +638,7 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
       { err: error, feature: promptName, provider, model, retryable: aiError.retryable },
       "Image generation failed"
     );
+    recordModelUse({ provider, model, outcome: "failed" });
 
     throw aiError;
   }
@@ -871,13 +909,18 @@ export async function decide<const Q extends DecisionQuestions>(
   };
 
   try {
-    return await requestDecision({
+    const result = await requestDecision({
       feature,
       state,
       questions,
       settings,
       timeoutMs: aiConfig.timeoutMs,
     });
+
+    // The resolved id, so the job monitor shows the release behind jev-latest.
+    recordModelUse({ provider: settings.provider, model: result.model, outcome: "completed" });
+
+    return result;
   } catch (error) {
     const aiError = toAIError(error);
 
@@ -894,6 +937,7 @@ export async function decide<const Q extends DecisionQuestions>(
       },
       "Decision failed"
     );
+    recordModelUse({ provider: settings.provider, model: settings.model, outcome: "failed" });
 
     throw aiError;
   }

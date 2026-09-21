@@ -13,8 +13,8 @@
 import type { Page } from "@playwright/test";
 import { request } from "@playwright/test";
 
-import type { AIE2EStack } from "./fixture";
 import type { TypeSafeAnswer } from "../harness/ai-provider";
+import type { AIE2EStack } from "./fixture";
 import { expect, test } from "./fixture";
 import { submitPasteImport } from "./import-support";
 import { readStoredCategories, setAutomaticEnrichment } from "./recipe-enrichment-support";
@@ -58,8 +58,16 @@ function boolean(probability: number): TypeSafeAnswer {
 function answers(categories: Record<"Breakfast" | "Lunch" | "Dinner" | "Snack", number>) {
   return {
     isRecipe: boolean(0.99),
-    completeness: { type: "score" as const, score: 2, probabilities: { 0: 0.01, 1: 0.04, 2: 0.95 } },
-    faithfulness: { type: "score" as const, score: 2, probabilities: { 0: 0.01, 1: 0.04, 2: 0.95 } },
+    completeness: {
+      type: "score" as const,
+      score: 2,
+      probabilities: { 0: 0.01, 1: 0.04, 2: 0.95 },
+    },
+    faithfulness: {
+      type: "score" as const,
+      score: 2,
+      probabilities: { 0: 0.01, 1: 0.04, 2: 0.95 },
+    },
     Breakfast: boolean(categories.Breakfast),
     Lunch: boolean(categories.Lunch),
     Dinner: boolean(categories.Dinner),
@@ -80,19 +88,24 @@ test.afterAll(async () => {
   await configureDecisionModel({ provider: "disabled" }).catch(() => undefined);
 });
 
-/** Save the Decision block through the admin mutation, as the form does. */
-async function configureDecisionModel(config: {
-  provider: "typesafe" | "disabled";
-  apiKey?: string;
-  endpoint?: string;
-}): Promise<void> {
-  const api = await request.newContext({
+/** An API context signed in as the owner, for the admin procedures the form and monitor call. */
+function ownerApi() {
+  return request.newContext({
     baseURL: stack.baseURL,
     extraHTTPHeaders: {
       origin: stack.baseURL,
       cookie: stack.ownerCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; "),
     },
   });
+}
+
+/** Save the Decision block through the admin mutation, as the form does. */
+async function configureDecisionModel(config: {
+  provider: "typesafe" | "disabled";
+  apiKey?: string;
+  endpoint?: string;
+}): Promise<void> {
+  const api = await ownerApi();
 
   try {
     const response = await api.post("/api/trpc/admin.updateDecisionConfig", {
@@ -150,6 +163,57 @@ async function eventuallyOnRecipe(assertion: () => Promise<void>): Promise<void>
   }).toPass({ timeout: 60_000, intervals: [1_000, 2_000, 5_000] });
 }
 
+/** One model a job asked, as the admin job detail reports it. */
+interface JobModel {
+  provider: string;
+  model: string;
+  outcome: "completed" | "failed";
+}
+
+/**
+ * The models the newest job on a queue asked, from the admin job monitor's
+ * own procedures, once that job has settled. The ledger is written when the
+ * processor returns, which is after the recipe update a scenario waited for.
+ */
+async function newestJobModels(queue: string): Promise<JobModel[]> {
+  const api = await ownerApi();
+  const query = async <T>(procedure: string, input: unknown): Promise<T> => {
+    const response = await api.get(
+      `/api/trpc/${procedure}?input=${encodeURIComponent(JSON.stringify({ json: input }))}`
+    );
+
+    if (!response.ok()) {
+      throw new Error(`${procedure} failed: ${response.status()} ${await response.text()}`);
+    }
+
+    return ((await response.json()) as { result: { data: { json: T } } }).result.data.json;
+  };
+
+  try {
+    let models: JobModel[] = [];
+
+    await expect(async () => {
+      const [newest] = await query<{ id: string; state: string }[]>("admin.jobs.list", {
+        queue,
+        limit: 1,
+      });
+
+      expect(newest?.state).toBe("completed");
+
+      const detail = await query<{ models: JobModel[] }>("admin.jobs.detail", {
+        queue,
+        jobId: newest!.id,
+      });
+
+      models = detail.models;
+    }).toPass({ timeout: 30_000, intervals: [500, 1_000, 2_000] });
+
+    return models;
+  } finally {
+    await api.dispose();
+  }
+}
+
 /** Chat completions the AI provider served: everything that was not a Decision or an image. */
 function chatRequestCount(): number {
   const { control } = stack.ai;
@@ -199,6 +263,15 @@ test("an unsure Decision hands categorization to the AI provider, whose answer i
   // Decision Model was asked at least twice, for the kind and for its check.
   expect(chatRequestCount()).toBe(2);
   expect(stack.ai.control.decisionRequestCount).toBeGreaterThanOrEqual(2);
+
+  // The job monitor names both: the Decision Model that was unsure and then
+  // checked, by the model id the provider answered with rather than the
+  // configured jev-latest, and the AI provider that answered, each once
+  // however many times it was asked.
+  expect(await newestJobModels("auto-categorization")).toEqual([
+    { provider: "typesafe", model: "jev-e2e-harness", outcome: "completed" },
+    { provider: "generic-openai", model: "test-model", outcome: "completed" },
+  ]);
 });
 
 test("a disabled Decision block leaves every kind to the AI provider", async () => {
@@ -207,7 +280,10 @@ test("a disabled Decision block leaves every kind to the AI provider", async () 
   stack.ai.control.reset();
   stack.ai.control.setDecisionDefault(null);
 
-  await importAndOpen("No Decision Stew", [bareRecipe("No Decision Stew"), { categories: ["Snack"] }]);
+  await importAndOpen("No Decision Stew", [
+    bareRecipe("No Decision Stew"),
+    { categories: ["Snack"] },
+  ]);
 
   await eventuallyOnRecipe(async () => {
     await expect(page.getByText("Snack").first()).toBeVisible({ timeout: 3_000 });

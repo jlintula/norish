@@ -31,6 +31,8 @@ vi.mock("@norish/shared-server/logger", () => {
 });
 
 const { generateImage } = await import("@norish/shared-server/ai/runtime/runtime");
+const { createModelUseLedger, runWithModelUseLedger } =
+  await import("@norish/shared-server/ai/runtime/model-use-ledger");
 const { AIConfigurationError, AIDisabledError, AIProviderError, AIResponseError } =
   await import("@norish/shared-server/ai/runtime/errors");
 
@@ -204,6 +206,22 @@ describe("generateImage", () => {
     await generateImage({ prompt: "image-generation-style" });
 
     expect(captured[0]!.authorization).toBe("Bearer ai-config-key");
+  });
+
+  it("records the image model on the job's ledger, a refusal as a failure", async () => {
+    const ledger = createModelUseLedger();
+
+    await runWithModelUseLedger(ledger, () => generateImage({ prompt: "image-generation-style" }));
+
+    reply = () => ({ status: 400, body: { error: { message: "refused" } } });
+    await runWithModelUseLedger(ledger, () =>
+      generateImage({ prompt: "image-generation-style" }).catch(() => undefined)
+    );
+
+    expect(ledger.uses).toEqual([
+      { provider: "generic-openai", model: "test-image-model", outcome: "completed" },
+      { provider: "generic-openai", model: "test-image-model", outcome: "failed" },
+    ]);
   });
 
   it("classifies a provider refusal as non-retryable", async () => {
