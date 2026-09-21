@@ -113,7 +113,11 @@ RUN pnpm run build && \
   apps/web/.next/standalone/node_modules/ffmpeg-static
 
 # Create isolated production deployment with pnpm deploy.
-RUN pnpm deploy --filter @norish/web --prod /app/deploy && \
+# --legacy: pnpm v10's default deploy requires injectWorkspacePackages, which
+# this repo deliberately does not set (injected copies of packages/* went stale
+# against their sources during development). The workspace copies deploy makes
+# are deleted on the next line regardless, so legacy deploy is equivalent here.
+RUN pnpm deploy --legacy --filter @norish/web --prod /app/deploy && \
   cd /app/deploy/node_modules && \
   # Remove workspace copies (source is in packages/, server code in dist-server/)
   rm -rf @norish && \
