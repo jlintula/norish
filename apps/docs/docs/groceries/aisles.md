@@ -65,4 +65,4 @@ That same rule applies everywhere:
 
 Because the Store remembers aisles by grocery name, two groceries with exactly the same name at the same Store can’t belong to different aisles.
 
-The grouped list works the same way. Groups are per aisle, per Store. Dragging a group into another aisle assigns every grocery name in that group to that aisle.
+The grouped list works the same way. Groups are per aisle, per Store, and per unit: lines of one name measured the same way share a row and add up, while a line measured differently, or with no measure at all, keeps a row of its own. Dragging a group into another aisle assigns every grocery name in that group to that aisle.
