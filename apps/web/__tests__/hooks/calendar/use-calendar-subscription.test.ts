@@ -17,7 +17,12 @@ vi.mock("@/app/providers/trpc-provider", () => ({
   useTRPC: () => ({
     calendar: {
       listItems: {
-        queryKey: (input: { startISO: string; endISO: string }) => ["calendar", "listItems", input],
+        // The shape @trpc/tanstack-react-query mints: the path, then the
+        // input under `input` — what the cross-range merge reads back.
+        queryKey: (input?: { startISO: string; endISO: string }) =>
+          input
+            ? [["calendar", "listItems"], { input, type: "query" }]
+            : [["calendar", "listItems"]],
       },
       onItemCreated: {
         subscriptionOptions: (_input: unknown, options: { onData: SubscriptionCallback }) => {
@@ -117,7 +122,7 @@ describe("useCalendarSubscription", () => {
   }
 
   function getQueryKey() {
-    return ["calendar", "listItems", { startISO, endISO }];
+    return [["calendar", "listItems"], { input: { startISO, endISO }, type: "query" }];
   }
 
   describe("onItemCreated subscription", () => {

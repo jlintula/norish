@@ -85,7 +85,17 @@ describe("calendar planned items household events", () => {
       recipeId: "11111111-1111-4111-8111-111111111111",
     });
 
-    expect(result).toEqual({ id: item.id });
+    // The actor gets the item back beside its id, the same payload the
+    // household hears, so its own caches converge without the echo.
+    expect(result).toEqual({
+      id: item.id,
+      item: expect.objectContaining({
+        id: item.id,
+        userId: ctx.user.id,
+        recipeName: "Omelette",
+        recipeImage: "/recipes/omelette.jpg",
+      }),
+    });
     expect(createPlannedItem).toHaveBeenCalledWith({
       userId: ctx.user.id,
       date: "2026-05-22",

@@ -162,7 +162,9 @@ export async function createCalendarItem(ctx: CalendarProcedureContext, input: C
 
   await publishCalendarItemEvent("itemCreated", { item: itemPayload }, ctx.householdKey);
 
-  return { id: newItem.id };
+  // The item rides the response so the actor's own caches converge without
+  // waiting on the realtime echo; the REST route's output schema keeps `id`.
+  return { id: newItem.id, item: itemPayload };
 }
 
 export async function deleteCalendarItem(

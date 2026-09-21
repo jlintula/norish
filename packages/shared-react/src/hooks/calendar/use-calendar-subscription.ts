@@ -1,10 +1,10 @@
 import type { PlannedItemFromQuery } from "@norish/shared/contracts";
 import type { CalendarRealtime } from "@norish/shared/contracts/realtime/calendar";
 import type { EventName, PayloadOf } from "@norish/shared/contracts/realtime/catalogue";
-import type { PlannedItemWithRecipePayload } from "@norish/shared/contracts/zod";
 
-import { useRealtimeSubscription } from "../../realtime/use-realtime-subscription";
 import type { CalendarCacheHelpers, CreateCalendarHooksOptions } from "./types";
+import { useRealtimeSubscription } from "../../realtime/use-realtime-subscription";
+import { isDateInRange, sortCalendarItems, toPlannedItemFromPayload } from "./calendar-cache-merge";
 
 type Payload<E extends EventName<CalendarRealtime>> = PayloadOf<CalendarRealtime, E>;
 
@@ -12,69 +12,14 @@ type CreateUseCalendarSubscriptionOptions = CreateCalendarHooksOptions & {
   useCalendarCacheHelpers: (startISO: string, endISO: string) => CalendarCacheHelpers;
 };
 
-function isDateInRange(date: string, startISO: string, endISO: string) {
-  return date >= startISO && date <= endISO;
-}
-
-function sortCalendarItems(items: PlannedItemFromQuery[]) {
-  return [...items].sort((a, b) => {
-    if (a.date !== b.date) return a.date.localeCompare(b.date);
-    if (a.slot !== b.slot) return a.slot.localeCompare(b.slot);
-
-    return a.sortOrder - b.sortOrder;
-  });
-}
-
-function toPlannedItemFromPayload(
-  item: PlannedItemWithRecipePayload,
-  existing?: PlannedItemFromQuery
-): PlannedItemFromQuery {
-  return {
-    id: item.id,
-    userId: item.userId,
-    date: item.date,
-    slot: item.slot,
-    sortOrder: item.sortOrder,
-    itemType: item.itemType,
-    recipeId: item.recipeId,
-    title: item.title,
-    recipeName: item.recipeName,
-    recipeImage: item.recipeImage,
-    servings: item.servings,
-    calories: item.calories,
-    version: item.version ?? existing?.version ?? 1,
-    createdAt: existing?.createdAt ?? new Date(),
-    updatedAt: new Date(),
-  };
-}
-
-function upsertItemInRange(
-  prev: PlannedItemFromQuery[],
-  item: PlannedItemWithRecipePayload,
-  startISO: string,
-  endISO: string
-) {
-  const existing = prev.find((current) => current.id === item.id);
-
-  if (!isDateInRange(item.date, startISO, endISO)) {
-    return prev.filter((current) => current.id !== item.id);
-  }
-
-  const nextItem = toPlannedItemFromPayload(item, existing);
-  const next = existing
-    ? prev.map((current) => (current.id === item.id ? nextItem : current))
-    : [...prev, nextItem];
-
-  return sortCalendarItems(next);
-}
-
 export function createUseCalendarSubscription({
   useTRPC,
   useCalendarCacheHelpers,
 }: CreateUseCalendarSubscriptionOptions) {
   return function useCalendarSubscription(startISO: string, endISO: string) {
     const trpc = useTRPC();
-    const { setCalendarData, invalidate } = useCalendarCacheHelpers(startISO, endISO);
+    const { setCalendarData, invalidate, upsertItemAcrossRanges, removeItemAcrossRanges } =
+      useCalendarCacheHelpers(startISO, endISO);
 
     const setItems = (updater: (prev: PlannedItemFromQuery[]) => PlannedItemFromQuery[]) => {
       setCalendarData((prev) => updater(prev ?? []));
@@ -83,17 +28,23 @@ export function createUseCalendarSubscription({
     // A lagged subscription refetches the range this screen shows.
     const lag = { onLag: invalidate };
 
+    // A created, edited or deleted item converges every cached range, not only
+    // the one this screen shows: the calendar page's own range sits in the
+    // cache while the dashboard is open, and a later visit or a range switch
+    // may serve it without a refetch. The merge is by id, so the same event
+    // reaching several mounted ranges — or the actor's own mutation result
+    // arriving first — is a no-op the second time.
     useRealtimeSubscription<Payload<"itemCreated">>(trpc.calendar.onItemCreated, {
       ...lag,
       onEvent: (payload) => {
-        setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
+        upsertItemAcrossRanges(payload.item);
       },
     });
 
     useRealtimeSubscription<Payload<"itemDeleted">>(trpc.calendar.onItemDeleted, {
       ...lag,
       onEvent: (payload) => {
-        setItems((prev) => prev.filter((item) => item.id !== payload.itemId));
+        removeItemAcrossRanges(payload.itemId);
       },
     });
 
@@ -145,7 +96,7 @@ export function createUseCalendarSubscription({
     useRealtimeSubscription<Payload<"itemUpdated">>(trpc.calendar.onItemUpdated, {
       ...lag,
       onEvent: (payload) => {
-        setItems((prev) => upsertItemInRange(prev, payload.item, startISO, endISO));
+        upsertItemAcrossRanges(payload.item);
       },
     });
 
