@@ -71,6 +71,12 @@ type ReadonlyRecipeMediaProps = {
    * slot. Off where the header underneath already names the author.
    */
   showAuthorFallback?: boolean;
+  /**
+   * Carried by every control floating on the photo, so a page that has to
+   * clear a status bar moves the whole row by one amount rather than each
+   * caller offsetting its own button.
+   */
+  chromeClassName?: string;
   topLeftContent?: React.ReactNode;
   topRightContent?: React.ReactNode;
   bottomRightContent?: React.ReactNode;
@@ -90,6 +96,7 @@ export function ReadonlyRecipeMedia({
   mediaClassName = "",
   rounded = false,
   showAuthorFallback = true,
+  chromeClassName = "",
   topLeftContent,
   topRightContent,
   bottomRightContent,
@@ -105,14 +112,22 @@ export function ReadonlyRecipeMedia({
         rounded={rounded}
       />
 
-      {topLeftContent && <div className="absolute top-4 left-4 z-50">{topLeftContent}</div>}
-      {topRightContent && <div className="absolute top-4 right-4 z-50">{topRightContent}</div>}
+      {topLeftContent && (
+        <div className={`absolute top-4 left-4 z-50 flex items-center gap-2 ${chromeClassName}`}>
+          {topLeftContent}
+        </div>
+      )}
+      {topRightContent && (
+        <div className={`absolute top-4 right-4 z-50 flex items-center gap-2 ${chromeClassName}`}>
+          {topRightContent}
+        </div>
+      )}
       {bottomRightContent && (
         <div className="absolute right-4 bottom-8 z-50">{bottomRightContent}</div>
       )}
 
       {showAuthorFallback && !topLeftContent && recipe.author && (
-        <div className="absolute top-4 left-4 z-50">
+        <div className={`absolute top-4 left-4 z-50 ${chromeClassName}`}>
           <AuthorChip
             image={recipe.author.image}
             name={recipe.author.name}

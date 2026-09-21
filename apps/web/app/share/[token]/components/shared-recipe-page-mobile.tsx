@@ -39,15 +39,12 @@ export function SharedRecipePageMobile() {
       >
         <ReadonlyRecipeMedia
           aspectRatio="4/3"
+          chromeClassName="mt-2"
           className="h-full rounded-none shadow-none"
           recipe={recipe}
           rounded={false}
           showAuthorFallback={false}
-          topRightContent={
-            <div className="mt-2">
-              <AuthLanguageSelector />
-            </div>
-          }
+          topRightContent={<AuthLanguageSelector />}
         />
 
         {/* The same dissolve the app's page draws: the photo runs out into
