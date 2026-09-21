@@ -10,7 +10,7 @@
 
 - [x] Two browsers, one household: grocery create, update and delete propagate without a reload; a validation failure toasts only the browser that caused it
 - [x] Browser B joins A's household while connected: B's socket closes with `4000`, reconnects, later events from A reach B; the server log shows B's old cursor refused with `identity-changed` and B's lists refetch
-- [ ] Server restart with both browsers connected: clients receive `1012`, reconnect within the backoff window, the events published during the restart arrive through Resume, Recovery runs once
+- [x] Server restart with both browsers connected: clients receive `1012`, reconnect within the backoff window, the events published during the restart arrive through Resume, Recovery runs once
 - [ ] `SIGTERM` with fifty open sockets (a small script with `ws`): shutdown completes in under five seconds and the log shows the documented order
 - [x] Redis restart: the server logs `realtime.reconnected`; every subscription ends Lagged; both browsers refetch and converge
 - [ ] `redis-cli CLIENT LIST` shows the same connection count with one tab and with five; `redis-cli TTL norish:stream:grocery:household:<key>:created` is at most 86400 and a key untouched for a day is gone
@@ -27,4 +27,5 @@
   - **Network gap** (the spec's sixth case): B offline for five seconds with its socket dropped, A creates; on return B's resubscribe carries `lastEventId`, the missed grocery rides the new socket and is on screen while the `groceries.list` refetch is still held — Resume before Recovery.
   - Two defects the suite found on its first runs, both fixed with unit tests: the client hook stated `enabled: undefined`, which tRPC reads as *disabled*, so no web subscription had opened (ticket 07); and the hub deleted a channel's state on a stale refcount after an in-flight `UNSUBSCRIBE`, stranding a subscription that arrived during the round trip (ticket 03).
   - For the operator's attention, outside this ticket: sessions live only in Redis (Better Auth secondary storage), so a Redis restart that loses its dataset (a `SIGKILL`, or no persistence) signs everyone out and the web app shows nothing for it — every request 401s and the page goes quiet. The suite restarts Redis gracefully (SIGTERM, snapshot) for that reason; testcontainers takes the restart timeout in milliseconds, and its default is an immediate kill.
+- 2026-09-21: the server-restart line is ticked on Mike's call. The suite asserts 1012 on every socket, the reconnect, and later events reaching the other browser; a publish during the restart (which needs a second process) and the single Recovery run are judged to work from the gap scenario rather than asserted.
 
