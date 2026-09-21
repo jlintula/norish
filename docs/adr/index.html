@@ -726,10 +726,11 @@
             <b>Proposed.</b> The AI Runtime gains <code>generateImage</code> beside
             <code>generateStructured</code> and <code>transcribe</code>, reading its own provider
             block rather than the server's, because only four of eleven providers expose an image
-            model at all. One feature, two requests: a structured call writes a short English visual
-            brief, and the image model draws from it. Rejects a lone <code>imageModel</code> field
-            beside <code>visionModel</code>, an OpenAI-compatible endpoint as the only route, and
-            going straight from recipe to image model.
+            model at all (five since the AI SDK 7 line: Ollama joined, amendment of 2026-09-19). One
+            feature, two requests: a structured call writes a short English visual brief, and the
+            image model draws from it. Rejects a lone <code>imageModel</code> field beside
+            <code>visionModel</code>, an OpenAI-compatible endpoint as the only route, and going
+            straight from recipe to image model.
           </p>
         </li>
         <li>
@@ -859,6 +860,25 @@
             publishes it; subscriptions are tracked with an opaque identity-bound Cursor and resume
             from it on reconnect, or end Lagged. Recovery remains the guarantee; the stream is a
             delivery buffer, not a transactional outbox.
+          </p>
+        </li>
+        <li>
+          <a href="ai/0035-decisions-are-the-runtimes-fourth-entry-point.md"
+            >ADR-0035 &mdash; Decisions are the runtime's fourth entry point, on their own
+            provider</a
+          >
+          <p>
+            <b>Proposed.</b> The AI Runtime gains <code>decide</code> beside
+            <code>generateStructured</code>, <code>transcribe</code> and <code>generateImage</code>:
+            typed Choice, Score and Boolean questions in, a pick and a probability distribution
+            back, from a Decision Model (TypeSafe's Jev) configured in its own block with its own
+            key and no fallback to the AI configuration's. A Decision has no Prompt (the scoped
+            exception to ADR-0016): its criteria are the domain's own option set. Thresholds are
+            named constants in code; which uses run is one multi-select, all on by default. The
+            Decision Model is never required &mdash; every converted kind keeps its fallback. The AI
+            SDK line moved to 7 for it. Rejects a Jev member in the AI provider enum, a
+            <code>decisionModel</code> field beside <code>model</code>, a separate
+            <code>packages/decisions</code>, and thresholds as settings.
           </p>
         </li>
       </ul>

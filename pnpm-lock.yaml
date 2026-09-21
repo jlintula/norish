@@ -1158,50 +1158,53 @@ importers:
   packages/shared-server:
     dependencies:
       '@ai-sdk/anthropic':
-        specifier: ^3.0.111
-        version: 3.0.111(zod@4.4.3)
+        specifier: ^4.0.58
+        version: 4.0.58(zod@4.4.3)
       '@ai-sdk/azure':
-        specifier: ^3.0.105
-        version: 3.0.105(zod@4.4.3)
+        specifier: ^4.0.75
+        version: 4.0.75(zod@4.4.3)
       '@ai-sdk/deepseek':
-        specifier: ^2.0.57
-        version: 2.0.57(zod@4.4.3)
+        specifier: ^3.0.49
+        version: 3.0.49(zod@4.4.3)
       '@ai-sdk/google':
-        specifier: ^3.0.111
-        version: 3.0.111(zod@4.4.3)
+        specifier: ^4.0.76
+        version: 4.0.76(zod@4.4.3)
       '@ai-sdk/groq':
-        specifier: ^3.0.60
-        version: 3.0.60(zod@4.4.3)
+        specifier: ^4.0.46
+        version: 4.0.46(zod@4.4.3)
       '@ai-sdk/mistral':
-        specifier: ^3.0.59
-        version: 3.0.59(zod@4.4.3)
+        specifier: ^4.0.48
+        version: 4.0.48(zod@4.4.3)
       '@ai-sdk/openai':
-        specifier: ^3.0.99
-        version: 3.0.99(zod@4.4.3)
+        specifier: ^4.0.71
+        version: 4.0.71(zod@4.4.3)
       '@ai-sdk/openai-compatible':
-        specifier: ^2.0.70
-        version: 2.0.70(zod@4.4.3)
+        specifier: ^3.0.53
+        version: 3.0.53(zod@4.4.3)
       '@ai-sdk/perplexity':
-        specifier: ^3.0.54
-        version: 3.0.54(zod@4.4.3)
+        specifier: ^4.0.48
+        version: 4.0.48(zod@4.4.3)
+      '@ai-sdk/typesafe-ai':
+        specifier: ^3.0.4
+        version: 3.0.4(zod@4.4.3)
       '@norish/config':
         specifier: workspace:*
         version: link:../config
       '@norish/db':
         specifier: workspace:*
-        version: file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
+        version: file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n':
         specifier: workspace:*
         version: link:../i18n
       '@norish/shared':
         specifier: workspace:*
-        version: file:packages/shared(12aad0a198982bb8cdc69fa4f03befce)
+        version: file:packages/shared(35a38faf0f85ac699f7d7602ebf2d864)
       ai:
-        specifier: ^6.0.262
-        version: 6.0.262(zod@4.4.3)
+        specifier: ^7.0.107
+        version: 7.0.107(zod@4.4.3)
       ai-sdk-ollama:
-        specifier: ^3.8.8
-        version: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+        specifier: ^4.3.0
+        version: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver:
         specifier: 'catalog:'
         version: 7.0.1
@@ -1249,8 +1252,8 @@ importers:
         version: 4.4.3
     devDependencies:
       '@ai-sdk/provider':
-        specifier: ^3.0.15
-        version: 3.0.15
+        specifier: ^4.0.17
+        version: 4.0.17
       '@norish/eslint-config':
         specifier: workspace:*
         version: file:tooling/eslint(@typescript-eslint/eslint-plugin@8.67.0(@typescript-eslint/parser@8.67.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.67.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(turbo@2.10.11)(typescript@6.0.3)
@@ -1507,85 +1510,81 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@ai-sdk/anthropic@3.0.111':
-    resolution: {integrity: sha512-atgBW8jZPr/KuaKX5FvDIHuXBI8VCol6kVeoD4P0657+VXR73QsLogXQVN/Zt5FHtq9WzpdIZseCJiXPqkgwwA==}
-    engines: {node: '>=18'}
+  '@ai-sdk/anthropic@4.0.58':
+    resolution: {integrity: sha512-vhXKBz7jnIhBlOoj2d0joyHicWISuIxDNha65SLrAnagAkVgulLoZBRLZRazstxlO/BtXU+cDERe1opVKte2OQ==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/azure@3.0.105':
-    resolution: {integrity: sha512-jBwAsN3zO5p8s141uvuKlTjtLAgmnJZ7VHf5qbQfdFHVOjbDU9qT7yoMdiJYPqV/k5s0cuUdNYAgmr/IDuSNyQ==}
-    engines: {node: '>=18'}
+  '@ai-sdk/azure@4.0.75':
+    resolution: {integrity: sha512-radEF1WwU598ah1UDO0X0op4P/KxSBH/mgyv22iXKy3mhNSPI5PE8f7nxV0GTpYZbt7YKuV5JcApySiC+vfmzA==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/deepseek@2.0.57':
-    resolution: {integrity: sha512-dGSieE6Q9JLSuSYajEgYZYL4o1vKEEXOgM8eNQGT+9HdoCYBNqLybVdjJB+iu127s0jKLCxK0Nq53ufN+mofEg==}
-    engines: {node: '>=18'}
+  '@ai-sdk/deepseek@3.0.49':
+    resolution: {integrity: sha512-fcZ6uFsGKCyMy8FucUGAkI/Wi4vX4QQNfF7+hCzmDxQ9fcvsqTruncPqJ/PKlw7iCj4z4m2mD4cGzTjptYTG6g==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/gateway@3.0.178':
-    resolution: {integrity: sha512-eejaHbdvdweH8OTye6p86qrSQqablE5HRHqo7TV8ZnGj9OgILKhrcGstT3k2ZYFioZM6JAE68qNORYmKFnJLkw==}
-    engines: {node: '>=18'}
+  '@ai-sdk/gateway@4.0.87':
+    resolution: {integrity: sha512-6wJmX/D5OO7tvDJbtFdXdBuRt8AkCnW+FLK+W35UHe/tHgolAa4hclXtJcMSYnlTDy/t5DNRgdesVaoMXtwzow==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/google@3.0.111':
-    resolution: {integrity: sha512-XWWju5pVD7Tf30c2VziMfPph3XpN/jDTE5aJhqAPJ2zRmHSSveNYFoosFLOWWFIgQnwGe9AM3bAXR8kHyC2MdA==}
-    engines: {node: '>=18'}
+  '@ai-sdk/google@4.0.76':
+    resolution: {integrity: sha512-RHYTfsrlzM2D7VS4dxq2TWFj0tzE+ALesbTIkrFgyqBbBER8TLw/r93h9IVhR27cLcl4II1tLyiuzZq44IyoCQ==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/groq@3.0.60':
-    resolution: {integrity: sha512-ERL7U3J0Xg8AZS2KKFZVi3yYepvpSNMJOhamPd3NkQbbG7tnYdNEopLbJRfKQm9AN3stZhf7H3Pf7vdAgknbgg==}
-    engines: {node: '>=18'}
+  '@ai-sdk/groq@4.0.46':
+    resolution: {integrity: sha512-xvR0KORuhb5x2Q4TcTc/kD+HSG0iWy9kMO1tvEdo87OMAAOO1YmZw4F28uq5IhYO9xcbas7KQMP5deUlG64dDA==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/mistral@3.0.59':
-    resolution: {integrity: sha512-siNvAgWfjyEHGPPT+Lo2WDAz9JuVL0ev49TGirg+oB7cDeBtfb1Z+n+5Obsz+xxQWZbKk6emX2LkRrO4DsOtNA==}
-    engines: {node: '>=18'}
+  '@ai-sdk/mistral@4.0.48':
+    resolution: {integrity: sha512-yKr/y8RRJfl/e3J6i16iVLbGpZEBjpwptDWJ3C1FT3PtdVyH/5vnRU81NpBu0Qs3r5cKAEk7btoJ7tA50N4VVA==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/openai-compatible@2.0.70':
-    resolution: {integrity: sha512-2OUf83ezu8UmyN9knPo2AgJ+CoJronxvULgSUdA1GgTU0Codku7XnHjwKHppk9FPLDW0eg+Y4V6iOKWMTlqEzA==}
-    engines: {node: '>=18'}
+  '@ai-sdk/openai-compatible@3.0.53':
+    resolution: {integrity: sha512-uOeghHYcF+CHP/dOCAtdfKesuKLKqDFtkq79bJFNSx4YOqpiP734TdJAZDA8KIWH7mdGNQ0a4N9238HG4FN2Rg==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/openai@3.0.99':
-    resolution: {integrity: sha512-0Y6E5bvR+3eugt5rq2iy39EAAFi4nijXf1kdvcfoMm4erEGMe/6egIpvdvv5ePBU2YsnsxFuLRmMJ76Kv/babQ==}
-    engines: {node: '>=18'}
+  '@ai-sdk/openai@4.0.71':
+    resolution: {integrity: sha512-w8FuHr1bD/bP/8SIgcaJKUyePE4ke9s7+Ew2ed/9i5mDoFXEfyVUyFX8R0wQ3YfcdMKmTs8ct/f6XJsXsnPVsQ==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/perplexity@3.0.54':
-    resolution: {integrity: sha512-pdydZpaw7sXuZkAbsGoY5grCG03RQvzkEu6DEDmdcyYD8//TDDeWU2q95R3IkphUxz2ZZo0mBPTXi4v4FW4QHg==}
-    engines: {node: '>=18'}
+  '@ai-sdk/perplexity@4.0.48':
+    resolution: {integrity: sha512-FTc5+di3jpzvDCydzgZU/5kTGjMxMCj8Q6vUEjQDvUxYYADqIBOV40N02slnQYn0fIoKFnu0XOu6qip02ZqaQA==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@4.0.41':
-    resolution: {integrity: sha512-I7hhjfw01yEI8NkuAsT8Mv6xbWFr/lqLXMdaJQ2zWfXEpxog1eT7skDcv1+RY29/+5btzH8wD+vVvy48bk9oNQ==}
-    engines: {node: '>=18'}
+  '@ai-sdk/provider-utils@5.0.45':
+    resolution: {integrity: sha512-gLuaCups8OCIRz3eO6WWz5op7VLYNNtFzyH0sWUr0FE9v7cTxR0qxDpQdrKnGcql+9WWttobjnZsJVsuEbsPQQ==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@4.0.46':
-    resolution: {integrity: sha512-tEtld97plCFiYevsJuOkGkeuhQndeMWFBVrJS4AjnbD5AqrNSXRCe0p+BZ3Cju/sxDeeZ9ym3q9YUV8fASA7aQ==}
-    engines: {node: '>=18.17'}
+  '@ai-sdk/provider@4.0.17':
+    resolution: {integrity: sha512-VYMBxIQdcHqbIf1j+YZlI9Ati6LZ4wJe0GGd4z4a5H/KxTggjeOiyaVYTnfF7LHZK5jMQ+rofmzz4QPqf++NUw==}
+    engines: {node: '>=22'}
+
+  '@ai-sdk/typesafe-ai@3.0.4':
+    resolution: {integrity: sha512-LQvqtf6cVla5iyH/LYs9rvl63NDWRRqggz9ilGNmjixhi5TuONAWo+SC6+xT46izn/bpyx9hmXNdMLg3ZSSW0A==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
-
-  '@ai-sdk/provider@3.0.14':
-    resolution: {integrity: sha512-5X1k57JBJ4H7H1QjX7CnJYAB1I19r/trVZTMcSms7/kLNZ8RaU4Nt2agcwZzv82Hfx6Q7/TOLU7agAKeFfc8cA==}
-    engines: {node: '>=18'}
-
-  '@ai-sdk/provider@3.0.15':
-    resolution: {integrity: sha512-XeZW1CcDF2GMbH4wejW6xBRI2QCOgnkVYUnxoeDadB1mf85riL2bMUeDoh+6gJ/r4mjNfzUPW8OjLjvwTP0u1Q==}
-    engines: {node: '>=18'}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -2932,10 +2931,6 @@ packages:
   '@expo/xcpretty@4.4.4':
     resolution: {integrity: sha512-4aQzz9vgxcNXFfo/iyNgDDYfsU5XGKKxWxZopw0cVotHiW+U8IJbIxMaxsINs6bHhtkG3StKNPcOrn3eBuxKPw==}
     hasBin: true
-
-  '@fastify/busboy@2.1.1':
-    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
-    engines: {node: '>=14'}
 
   '@fontsource-variable/fira-code@5.3.0':
     resolution: {integrity: sha512-ZhvHeknlicraKVSJBa1NrJnXDVByUkC407zwgELYfmnx3p9g8vwIPfQCxx8YD3K7dAeCdLuHJOHlpMfRsIcApQ==}
@@ -5388,6 +5383,9 @@ packages:
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
 
+  '@workflow/serde@4.1.0':
+    resolution: {integrity: sha512-pav4F2BoirECWR7Nf1TKt+2eETcBj7jj4cBefQ8VXQCA6NPkaKeLfj/zMgi+3zYV5ZIBT4GuUiphsj0/b9hPQQ==}
+
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
@@ -5563,15 +5561,15 @@ packages:
     engines: {node: '>=18.18'}
     hasBin: true
 
-  ai-sdk-ollama@3.8.8:
-    resolution: {integrity: sha512-peWelPf6sVsRULQyYhfyu1dMZhwewRszsbQVfbuhNLflh+ncRXn6pe1BRE3NAcSsWd7JMRZAV5RzcuR3R9ZfaQ==}
+  ai-sdk-ollama@4.3.0:
+    resolution: {integrity: sha512-3rvaWZJvprmt707WnbkeEvMJc6XZHwfgXbF73g8fQhn4spGWOdeASnFd/xH9hmrdml7oTtZLFqzk6Fvkr/q8Ig==}
     engines: {node: '>=22'}
     peerDependencies:
-      ai: ^6.0.197
+      ai: ^7.0.95
 
-  ai@6.0.262:
-    resolution: {integrity: sha512-hUhRNV89lcZiTBj3wEFB+m6qcuI9O7Pw3KIwtRTPEU5pkWcXOUFrxaFR1mwbO4kYOkb08FrjtL26ME0/86yTJw==}
-    engines: {node: '>=18'}
+  ai@7.0.107:
+    resolution: {integrity: sha512-PVYQ3W9kR8oYiGQxbg4aFIlhQzKskZm8UV+4E0zB2uKOzFr8ju3bXQncOOZtLsOgJY8vdpgyu3cXtomsfcdQYg==}
+    engines: {node: '>=22'}
     peerDependencies:
       zod: 4.4.3
 
@@ -6256,6 +6254,7 @@ packages:
   cron-parser@4.9.0:
     resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
     engines: {node: '>=12.0.0'}
+    deprecated: v4 is no longer maintained, upgrade to v5
 
   cross-fetch@3.2.0:
     resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
@@ -10525,14 +10524,6 @@ packages:
   undici-types@7.24.6:
     resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
-  undici@5.29.0:
-    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
-    engines: {node: '>=14.0'}
-
-  undici@6.28.0:
-    resolution: {integrity: sha512-LIY910g9TI13YS95lrMFrs8Rm/u/irgHeTWoKCoteeJ04CUJ92eEfj0rVn+7VKMPBpUPiUoBKfhNyLI23EE/KA==}
-    engines: {node: '>=18.17'}
-
   undici@7.24.6:
     resolution: {integrity: sha512-Xi4agocCbRzt0yYMZGMA6ApD7gvtUFaxm4ZmeacWI4cZxaF6C+8I8QfofC20NAePiB/IcvZmzkJ7XPa471AEtA==}
     engines: {node: '>=20.18.1'}
@@ -11080,92 +11071,87 @@ snapshots:
       react-transition-group: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       use-sync-external-store: 1.6.0(react@19.2.3)
 
-  '@ai-sdk/anthropic@3.0.111(zod@4.4.3)':
+  '@ai-sdk/anthropic@4.0.58(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/azure@3.0.105(zod@4.4.3)':
+  '@ai-sdk/azure@4.0.75(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/deepseek@2.0.57(zod@4.4.3)':
+  '@ai-sdk/deepseek@3.0.49(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/gateway@3.0.178(zod@4.4.3)':
+  '@ai-sdk/gateway@4.0.87(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       '@vercel/oidc': 3.2.0
       zod: 4.4.3
 
-  '@ai-sdk/google@3.0.111(zod@4.4.3)':
+  '@ai-sdk/google@4.0.76(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/groq@3.0.60(zod@4.4.3)':
+  '@ai-sdk/groq@4.0.46(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/mistral@3.0.59(zod@4.4.3)':
+  '@ai-sdk/mistral@4.0.48(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/openai-compatible@2.0.70(zod@4.4.3)':
+  '@ai-sdk/openai-compatible@3.0.53(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/openai@3.0.99(zod@4.4.3)':
+  '@ai-sdk/openai@4.0.71(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/perplexity@3.0.54(zod@4.4.3)':
+  '@ai-sdk/perplexity@4.0.48(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@4.0.41(zod@4.4.3)':
+  '@ai-sdk/provider-utils@5.0.45(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.14
+      '@ai-sdk/provider': 4.0.17
       '@standard-schema/spec': 1.1.0
+      '@workflow/serde': 4.1.0
       eventsource-parser: 3.0.8
-      undici: 5.29.0
+      undici: 7.29.0
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@4.0.46(zod@4.4.3)':
-    dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@standard-schema/spec': 1.1.0
-      eventsource-parser: 3.0.8
-      undici: 6.28.0
-      zod: 4.4.3
-
-  '@ai-sdk/provider@3.0.14':
+  '@ai-sdk/provider@4.0.17':
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/provider@3.0.15':
+  '@ai-sdk/typesafe-ai@3.0.4(zod@4.4.3)':
     dependencies:
-      json-schema: 0.4.0
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
+      zod: 4.4.3
 
   '@alloc/quick-lru@5.2.0': {}
 
@@ -12651,7 +12637,7 @@ snapshots:
       postcss: 8.5.26
       resolve-from: 5.0.0
     optionalDependencies:
-      expo: 56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
+      expo: 56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.8(react@19.2.8))(react-native-web@0.21.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -12849,8 +12835,6 @@ snapshots:
       '@babel/code-frame': 7.29.0
       chalk: 4.1.2
       js-yaml: 4.3.1
-
-  '@fastify/busboy@2.1.1': {}
 
   '@fontsource-variable/fira-code@5.3.0': {}
 
@@ -14723,21 +14707,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(021d5b794890c5960dacb4802e871347)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(12aad0a198982bb8cdc69fa4f03befce)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -14814,21 +14798,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(12cc5c4fa448cd934be10fccd19e1f3f)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(af89b525654728d2bffbab8d2c837198)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -14905,21 +14889,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(1808de4443bf8035571cb417a5f95cdc)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(af89b525654728d2bffbab8d2c837198)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -14996,21 +14980,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(5cbed4a5c84ca218ebfae7b981595b86)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(77c190dd61004f5de2af707a5c359011)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15087,21 +15071,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(741d449565a1a3a07141e12e30beeab9)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(35a38faf0f85ac699f7d7602ebf2d864)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15178,21 +15162,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(74beff18908830f159bdc5e2b0190f84)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(77c190dd61004f5de2af707a5c359011)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15269,21 +15253,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(83d9d0349e4cea0e70f4ee57f238d6be)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(1d42058256bb4a1e70da912a64f00efa)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15360,21 +15344,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(adbc1e9dff3abccef35b9e079b28c072)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(df29c446f81fabba4d8f5996f5b7b181)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15451,21 +15435,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(c428b866e43f3566395031476deebdd3)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(1d42058256bb4a1e70da912a64f00efa)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15542,21 +15526,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(da529bff249114f66479efbc3e5480e8)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(df29c446f81fabba4d8f5996f5b7b181)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -15633,21 +15617,21 @@ snapshots:
 
   '@norish/shared-server@file:packages/shared-server(e0fa88556e7013d3b05c1503173d20bf)':
     dependencies:
-      '@ai-sdk/anthropic': 3.0.111(zod@4.4.3)
-      '@ai-sdk/azure': 3.0.105(zod@4.4.3)
-      '@ai-sdk/deepseek': 2.0.57(zod@4.4.3)
-      '@ai-sdk/google': 3.0.111(zod@4.4.3)
-      '@ai-sdk/groq': 3.0.60(zod@4.4.3)
-      '@ai-sdk/mistral': 3.0.59(zod@4.4.3)
-      '@ai-sdk/openai': 3.0.99(zod@4.4.3)
-      '@ai-sdk/openai-compatible': 2.0.70(zod@4.4.3)
-      '@ai-sdk/perplexity': 3.0.54(zod@4.4.3)
+      '@ai-sdk/anthropic': 4.0.58(zod@4.4.3)
+      '@ai-sdk/azure': 4.0.75(zod@4.4.3)
+      '@ai-sdk/deepseek': 3.0.49(zod@4.4.3)
+      '@ai-sdk/google': 4.0.76(zod@4.4.3)
+      '@ai-sdk/groq': 4.0.46(zod@4.4.3)
+      '@ai-sdk/mistral': 4.0.48(zod@4.4.3)
+      '@ai-sdk/openai': 4.0.71(zod@4.4.3)
+      '@ai-sdk/openai-compatible': 3.0.53(zod@4.4.3)
+      '@ai-sdk/perplexity': 4.0.48(zod@4.4.3)
       '@norish/config': file:packages/config
       '@norish/db': file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n': file:packages/i18n
       '@norish/shared': file:packages/shared(079f080ebf79d72ffe7aa689243b7ace)
-      ai: 6.0.262(zod@4.4.3)
-      ai-sdk-ollama: 3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
+      ai-sdk-ollama: 4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3)
       archiver: 7.0.1
       fuse.js: 7.1.0
       heic-convert: 2.1.0
@@ -16567,7 +16551,8 @@ snapshots:
       - vitest
       - vue
 
-  '@opentelemetry/api@1.9.0': {}
+  '@opentelemetry/api@1.9.0':
+    optional: true
 
   '@opentelemetry/semantic-conventions@1.41.1': {}
 
@@ -18651,6 +18636,8 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
+  '@workflow/serde@4.1.0': {}
+
   '@xmldom/xmldom@0.8.11': {}
 
   '@yuku-codegen/binding-android-arm64@0.8.7':
@@ -18757,22 +18744,21 @@ snapshots:
 
   agent-cli-detector@0.1.6: {}
 
-  ai-sdk-ollama@3.8.8(ai@6.0.262(zod@4.4.3))(zod@4.4.3):
+  ai-sdk-ollama@4.3.0(ai@7.0.107(zod@4.4.3))(zod@4.4.3):
     dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.41(zod@4.4.3)
-      ai: 6.0.262(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
+      ai: 7.0.107(zod@4.4.3)
       jsonrepair: 3.15.0
       ollama: 0.6.3
     transitivePeerDependencies:
       - zod
 
-  ai@6.0.262(zod@4.4.3):
+  ai@7.0.107(zod@4.4.3):
     dependencies:
-      '@ai-sdk/gateway': 3.0.178(zod@4.4.3)
-      '@ai-sdk/provider': 3.0.15
-      '@ai-sdk/provider-utils': 4.0.46(zod@4.4.3)
-      '@opentelemetry/api': 1.9.0
+      '@ai-sdk/gateway': 4.0.87(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.17
+      '@ai-sdk/provider-utils': 5.0.45(zod@4.4.3)
       zod: 4.4.3
 
   ajv@6.14.0:
@@ -19031,8 +19017,8 @@ snapshots:
       react-refresh: 0.14.2
     optionalDependencies:
       '@babel/runtime': 7.29.2
-      expo: 56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
-      expo-widgets: 56.0.27(@babel/core@7.29.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(expo@56.0.20)(react-dom@19.2.3(react@19.2.3))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
+      expo: 56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.8(react@19.2.8))(react-native-web@0.21.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+      expo-widgets: 56.0.27(@babel/core@7.29.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(expo@56.0.20)(react-dom@19.2.8(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -21180,6 +21166,21 @@ snapshots:
       - '@types/react-dom'
       - react-dom
       - react-native-worklets
+
+  expo-widgets@56.0.27(@babel/core@7.29.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(expo@56.0.20)(react-dom@19.2.8(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8):
+    dependencies:
+      '@expo/plist': 0.7.0
+      '@expo/ui': 56.0.26(@babel/core@7.29.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(expo@56.0.20)(react-dom@19.2.8(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)
+      expo: 56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.8(react@19.2.8))(react-native-web@0.21.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+      react: 19.2.8
+      react-native: 0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.8)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/react'
+      - '@types/react-dom'
+      - react-dom
+      - react-native-worklets
+    optional: true
 
   expo@56.0.20(@babel/core@7.29.0)(@expo/dom-webview@56.0.6)(@expo/metro-runtime@56.0.20)(expo-router@56.2.19)(expo-widgets@56.0.27)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)(typescript@6.0.3):
     dependencies:
@@ -25213,12 +25214,6 @@ snapshots:
   undici-types@7.21.0: {}
 
   undici-types@7.24.6: {}
-
-  undici@5.29.0:
-    dependencies:
-      '@fastify/busboy': 2.1.1
-
-  undici@6.28.0: {}
 
   undici@7.24.6: {}
 

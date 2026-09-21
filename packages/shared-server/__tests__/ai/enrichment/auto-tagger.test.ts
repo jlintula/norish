@@ -11,18 +11,26 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { listAllTagNames } from "@norish/db/repositories/tags";
 import { AIDisabledError } from "@norish/shared-server/ai/runtime/errors";
-import { getTagStrategy } from "@norish/shared-server/config/server-config-loader";
+import {
+  getTagStrategy,
+  isDecisionModelConfigured,
+  isDecisionUseEnabled,
+} from "@norish/shared-server/config/server-config-loader";
 
 const mocked = vi.hoisted(() => ({
   generateStructured: vi.fn(),
+  decide: vi.fn(),
 }));
 
 vi.mock("@norish/shared-server/ai/runtime/runtime", () => ({
   generateStructured: mocked.generateStructured,
+  decide: mocked.decide,
 }));
 
 vi.mock("@norish/shared-server/config/server-config-loader", () => ({
   getTagStrategy: vi.fn(),
+  isDecisionModelConfigured: vi.fn(),
+  isDecisionUseEnabled: vi.fn(),
 }));
 
 vi.mock("@norish/db/repositories/tags", () => ({
@@ -51,6 +59,10 @@ describe("Auto-Tagger", () => {
     vi.clearAllMocks();
     vi.mocked(getTagStrategy).mockResolvedValue("predefined");
     mocked.generateStructured.mockResolvedValue({ tags: [] });
+    // No Decision Model for validation unless a test says otherwise: every
+    // claim is kept unjudged.
+    vi.mocked(isDecisionModelConfigured).mockResolvedValue(false);
+    vi.mocked(isDecisionUseEnabled).mockResolvedValue(true);
   });
 
   describe("generateTagsForRecipe", () => {
@@ -137,6 +149,77 @@ describe("Auto-Tagger", () => {
       mocked.generateStructured.mockRejectedValue(new Error("API rate limit exceeded"));
 
       await expect(generateTagsForRecipe(mockRecipe)).rejects.toThrow("API rate limit exceeded");
+    });
+  });
+
+  describe("Enrichment Validation", () => {
+    /** The validation Decision: one probability per claim id. */
+    function verdicts(probabilities: Record<string, number>) {
+      return {
+        model: "jev",
+        answers: Object.fromEntries(
+          Object.entries(probabilities).map(([id, probability]) => [
+            id,
+            { type: "boolean", probability },
+          ])
+        ),
+      };
+    }
+
+    beforeEach(() => {
+      vi.mocked(isDecisionModelConfigured).mockResolvedValue(true);
+    });
+
+    it("checks only the tags this run proposed, and writes the survivors", async () => {
+      mocked.generateStructured.mockResolvedValue({ tags: ["Italian", "Quick", "Vegan"] });
+      mocked.decide.mockResolvedValue(verdicts({ italian: 0.9, quick: 0.8, vegan: 0.02 }));
+
+      const tags = await generateTagsForRecipe(mockRecipe);
+
+      expect(mocked.decide).toHaveBeenCalledTimes(1);
+      expect(mocked.decide).toHaveBeenCalledWith({
+        feature: "auto-tagging:validation",
+        state: {
+          title: "Spaghetti Carbonara",
+          description: "Classic Italian pasta dish",
+          ingredients: mockRecipe.ingredients,
+        },
+        questions: {
+          italian: { type: "boolean", instructions: expect.stringMatching(/"italian"/) },
+          quick: { type: "boolean", instructions: expect.stringMatching(/"quick"/) },
+          vegan: { type: "boolean", instructions: expect.stringMatching(/"vegan"/) },
+        },
+      });
+      expect(tags).toEqual(["italian", "quick"]);
+    });
+
+    it("never hands stored tags to validation: a person's tag is not in the run's claims", async () => {
+      // predefined_db offers the instance's stored tags to the model as
+      // input; they are not claims, so a stored "vegetarian" that the model
+      // did not propose is never judged and cannot be dropped.
+      vi.mocked(getTagStrategy).mockResolvedValue("predefined_db");
+      vi.mocked(listAllTagNames).mockResolvedValue(["vegetarian", "dinner"]);
+      mocked.generateStructured.mockResolvedValue({ tags: ["Italian"] });
+      mocked.decide.mockResolvedValue(verdicts({ italian: 0.9, vegetarian: 0.01 }));
+
+      await expect(generateTagsForRecipe(mockRecipe)).resolves.toEqual(["italian"]);
+      expect(Object.keys(mocked.decide.mock.calls[0]?.[0].questions)).toEqual(["italian"]);
+    });
+
+    it("returns an empty list when every claim was dropped, leaving the worker's rule to it", async () => {
+      mocked.generateStructured.mockResolvedValue({ tags: ["Nonsense"] });
+      mocked.decide.mockResolvedValue(verdicts({ nonsense: 0.01 }));
+
+      await expect(generateTagsForRecipe(mockRecipe)).resolves.toEqual([]);
+    });
+
+    it("keeps a disputed tag when the Validate enrichments use is off: the verdict is only logged", async () => {
+      vi.mocked(isDecisionUseEnabled).mockResolvedValue(false);
+      mocked.generateStructured.mockResolvedValue({ tags: ["Nonsense"] });
+      mocked.decide.mockResolvedValue(verdicts({ nonsense: 0.01 }));
+
+      await expect(generateTagsForRecipe(mockRecipe)).resolves.toEqual(["nonsense"]);
+      expect(vi.mocked(isDecisionUseEnabled)).toHaveBeenCalledWith("validateEnrichments");
     });
   });
 });
