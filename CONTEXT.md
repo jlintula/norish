@@ -264,11 +264,11 @@ The background process that, while Live, tops the Offline Cache up until the War
 A development-only debug affordance that forces Offline, faithfully blocking every backend exchange (probes, realtime, refetches, Replay) at the transport layer so the offline runtime can be exercised without taking the backend down. Gated out of production builds; persists across reloads; cleared only by an explicit action. Not a shipped user control (ADR-0007).
 
 **Recovery**:
-The process that makes the Live view trustworthy whenever queued work may exist: initial Live startup, return from Offline, WebSocket reconnection, manual synchronization, or automatic retry continuation. Recovery replays the Outbox to a terminal state, refetches active queries from server truth without clearing their visible cached data, then tops up the Warm Set. Its only public progress state is `isSyncing`. On a WebSocket reconnection, Resume delivers the missed Realtime Events first; Recovery still refetches afterwards and remains the convergence guarantee (ADR-0034).
+The process that makes the Live view trustworthy whenever queued work may exist: initial Live startup, return from Offline, WebSocket reconnection, a Live verdict while the Outbox holds pending work, manual synchronization, or automatic retry continuation. Recovery replays the Outbox to a terminal state, refetches active queries from server truth without clearing their visible cached data, then tops up the Warm Set. Its only public progress state is `isSyncing`. On a WebSocket reconnection, Resume delivers the missed Realtime Events first; Recovery still refetches afterwards and remains the convergence guarantee (ADR-0034).
 _Avoid_: Reconnect Sequence (too narrow; Recovery is not limited to an Offline-to-Live transition)
 
 **Outbox**:
-The persisted queue of mutations that could not reach the backend, held for Replay. Admission is universal — any mutation qualifies, with no per-feature list. Flows outside the data API (authentication) are outside the Outbox.
+The persisted queue of mutations that could not reach the backend, held for Replay. Admission is universal — any mutation qualifies, with no per-feature list. An admission while Live is a reachability hint: it asks the connectivity loop to probe at once, and the Live verdict that follows drains the queue. Flows outside the data API (authentication) are outside the Outbox.
 
 **Queued**:
 The third outcome of a mutation, beside success and failure: the change is held in the Outbox and presented to the user as tentatively applied. Server-side-effect mutations (e.g. import-from-URL) simply run at Replay time.
