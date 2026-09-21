@@ -1,6 +1,6 @@
 # 11 — Docs, screenshots and release notes
 
-Status: ready-for-human
+Status: resolved
 Blocked by: 03, 04, 05, 06, 07, 08, 09, 10
 
 Spec: `.scratch/decision-model/spec.md`
@@ -19,7 +19,7 @@ Convention: `docs/agents/feature-docs.md`
 ## Acceptance criteria
 
 - [x] The configuration page, the enrichment page and the release notes are updated with the glossary's vocabulary.
-- [ ] The screenshot exists and is embedded (needs a running admin form; see Comments); both mermaid diagrams render in the built site (done).
+- [x] The screenshot exists and is embedded; both mermaid diagrams render in the built site.
 - [x] `pnpm format` and `pnpm build` pass in `apps/docs`.
 - [x] The glossary and ADR match the shipped behaviour.
 
@@ -27,3 +27,4 @@ Convention: `docs/agents/feature-docs.md`
 
 - Filed 2026-09-19 with the spec.
 - 2026-09-19 — Docs written: `ai-provider.md` gains the Decision Model section (settings table, the uses multi-select, what it speeds up, what it checks and why stored data is untouched, what it cannot do, the mermaid diagram of the runtime's four entry points with the Decision-first branch and the validation step) and a _Asks the Decision Model first_ column on the Recipe Enrichment table; `recipes/enrichment.md` says nothing on the recipe changes by model and a run's own claims are checked while a person's are never touched; `groceries/prices.md` describes the link-or-rank behaviour with the lookup-ladder diagram; `release-notes/0.24.0-beta.md` gains `### Decision Model` under Features (no Upgrade note: the AI SDK move changed nothing a self-hoster configures, and the new column is an ordinary migration). `@docusaurus/theme-mermaid` added, `markdown.mermaid: true`, both diagrams render in the built site. `CONTEXT.md`'s Enrichment Validation entry and ADR-0035's consequences were corrected for the shadow launch modes and the grocery-linking threshold. **Not done: the screenshot** `admin-decision-model.png` — it needs the running admin form, which this environment (no Postgres, no Redis) cannot start; left `ready-for-human` for that one box.
+- 2026-09-21 — Screenshot done: `admin-decision-model.png` captured off the E2E production stack (a throwaway spec in the `ai` project seeded the block through `admin.updateDecisionConfig` at the fake provider and clipped the accordion section at 1.5×, the way the grocery captures were made), embedded at the top of the Decision Model section like the Image Generation one. The docs table lost its Endpoint row and the Model row says the field is prefilled, matching the trimmed form (ticket 03's 2026-09-21 comment); the release notes gain a line for the job monitor naming the model (ticket 04's 2026-09-21 comment). Resolved.
