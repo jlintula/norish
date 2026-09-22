@@ -391,7 +391,7 @@ describe("searchShop", () => {
     expect(storeProductsRepository.resolveProductLink).toHaveBeenCalledWith(STORE, "oude kaas");
   });
 
-  it("orders the offered products by the Decision kept with the Miss, marking the best guess", async () => {
+  it("orders the offered products by the Decision kept with the Miss, most likely first", async () => {
     storeProductsRepository.resolveProductLink.mockResolvedValue({
       storeId: STORE,
       normalizedName: "oude kaas",
@@ -402,7 +402,6 @@ describe("searchShop", () => {
           { url: "https://www.dirk.nl/p/b", probability: 0.6 },
           { url: "https://www.dirk.nl/p/a", probability: 0.3 },
         ],
-        best: "https://www.dirk.nl/p/b",
       },
     });
 
@@ -413,8 +412,7 @@ describe("searchShop", () => {
       "https://www.dirk.nl/p/a",
       "https://www.dirk.nl/p/c",
     ]);
-    expect(result.candidates[0]).toMatchObject({ suggested: true });
-    expect(result.candidates.filter((candidate) => candidate.suggested)).toHaveLength(1);
+    expect(result.answered).toBe(true);
   });
 
   it("ignores a suggestion once the name is linked: the question it ranked answers for is closed", async () => {
@@ -425,7 +423,6 @@ describe("searchShop", () => {
       product: { id: "product-1" },
       suggestion: {
         ranked: [{ url: "https://www.dirk.nl/p/c", probability: 0.9 }],
-        best: "https://www.dirk.nl/p/c",
       },
     });
 

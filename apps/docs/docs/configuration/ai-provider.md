@@ -253,7 +253,8 @@ What it speeds up:
   a structured parse is complete enough to keep. A page that is clearly not a
   recipe is refused in seconds rather than after a failed extraction.
 - **Grocery linking** ranks the products a shop offered for a grocery and links
-  one it is sure of; see [Prices](../groceries/prices.md#which-product).
+  its pick when that is likelier than every alternative together; see
+  [Prices](../groceries/prices.md#which-product).
 
 What it checks: with _Validate enrichments_ selected, every enrichment run's
 **own** output is checked before it is written. A tag, category, Cuisine or

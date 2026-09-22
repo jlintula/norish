@@ -50,6 +50,16 @@ const MAX_LOG_LINES = 200;
  * Pretty-print a value as JSON, truncating long strings (e.g. base64
  * image payloads) so responses stay small.
  */
+/** How long a step's detail may be and still sit on one line beside the step. */
+const ONE_LINE_DETAIL_LENGTH = 80;
+
+/** A step's detail as the modal shows it: one line where it fits, laid out where it does not. */
+function detailJson(detail: unknown): string {
+  const compact = safeStringify(detail, 0);
+
+  return compact.length <= ONE_LINE_DETAIL_LENGTH ? compact : safeStringify(detail, 2);
+}
+
 function safeStringify(value: unknown, indent: number = 2): string {
   try {
     const json = JSON.stringify(
@@ -137,7 +147,7 @@ function deriveStepsForAttempt(input: {
       id: event.id,
       status,
       durationMs,
-      detailJson: event.detail === undefined ? null : safeStringify(event.detail, 0),
+      detailJson: event.detail === undefined ? null : detailJson(event.detail),
       error: isLast && outcome === "failed" ? errorMessage : null,
     };
   });

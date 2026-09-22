@@ -45,6 +45,18 @@ vi.mock("@norish/queue/store-lookup/product-decision", () => ({
 
 const STORE = "11111111-1111-4111-8111-111111111111";
 const HOUSEHOLD = "household-1";
+/** What the Decision said when it linked, when it ranked without linking, and when it was not asked. */
+const SURE = {
+  pick: "Oude kaas 500 g · 930 g · 7.99 EUR",
+  none: 0.05,
+  ranked: [{ option: "Oude kaas 500 g · 930 g · 7.99 EUR", probability: 0.62 }],
+};
+const NOT_SURE = {
+  pick: "Oude kaas 1 kg · 930 g · 13.99 EUR",
+  none: 0.3,
+  ranked: [{ option: "Oude kaas 1 kg · 930 g · 13.99 EUR", probability: 0.4 }],
+};
+const OFF = { asked: false, reason: "not asked: no Decision Model, or Grocery linking is off" };
 const SEARCH_ADDRESS = "https://www.dirk.nl/zoeken/producten/{query}";
 const PRODUCT_PAGE = "https://www.dirk.nl/boodschappen/kaas/oude-kaas/97752";
 
@@ -97,7 +109,7 @@ describe("matchGroceryName", () => {
     );
     mocks.linkIfUnanswered.mockResolvedValue(true);
     // No Decision Model: the name rule alone decides, as it always has.
-    mocks.decideProduct.mockResolvedValue(null);
+    mocks.decideProduct.mockResolvedValue(OFF);
   });
 
   it("searches the shop with the grocery's own name", async () => {
@@ -266,7 +278,12 @@ describe("matchGroceryName", () => {
         product: { name: "1 de Beste Oude kaas 48+", price: 8.49, currency: "EUR", size: "500 g" },
       });
 
-      mocks.decideProduct.mockResolvedValue({ linked: offered[0], suggestion: null });
+      mocks.decideProduct.mockResolvedValue({
+        asked: true,
+        linked: offered[0],
+        suggestion: null,
+        verdict: SURE,
+      });
 
       const result = await matchGroceryName({
         storeId: STORE,
@@ -297,10 +314,14 @@ describe("matchGroceryName", () => {
           { url: offered[1]!.url, probability: 0.6 },
           { url: PRODUCT_PAGE, probability: 0.3 },
         ],
-        best: offered[1]!.url,
       };
 
-      mocks.decideProduct.mockResolvedValue({ linked: null, suggestion });
+      mocks.decideProduct.mockResolvedValue({
+        asked: true,
+        linked: null,
+        suggestion,
+        verdict: NOT_SURE,
+      });
 
       const result = await matchGroceryName({
         storeId: STORE,
@@ -326,7 +347,12 @@ describe("matchGroceryName", () => {
         candidates: offered,
         product: { name: "Oude kaas", price: 7.99, currency: "EUR" },
       });
-      mocks.decideProduct.mockResolvedValue({ linked: offered[0], suggestion: null });
+      mocks.decideProduct.mockResolvedValue({
+        asked: true,
+        linked: offered[0],
+        suggestion: null,
+        verdict: SURE,
+      });
       mocks.linkIfUnanswered.mockResolvedValue(false);
 
       await expect(
@@ -336,7 +362,7 @@ describe("matchGroceryName", () => {
 
     it("writes today's Miss, in the shop's order, when the Decision decided nothing", async () => {
       useShop({ candidates: offered });
-      mocks.decideProduct.mockResolvedValue(null);
+      mocks.decideProduct.mockResolvedValue({ asked: false, reason: "failed: overloaded" });
 
       await matchGroceryName({ storeId: STORE, name: "oude kaas", householdKey: HOUSEHOLD });
 
@@ -346,6 +372,158 @@ describe("matchGroceryName", () => {
         null,
         null
       );
+    });
+  });
+
+  describe("what the job monitor is told", () => {
+    const offered = [
+      candidate("Oude kaas 500 g", PRODUCT_PAGE),
+      candidate("Oude kaas 1 kg", "https://www.dirk.nl/boodschappen/kaas/oude-kaas/97753", 13.99),
+    ];
+
+    /** Every step entered and every detail completed, in the order they came. */
+    function listening() {
+      const told: unknown[] = [];
+
+      return {
+        told,
+        onStep: (step: string) => {
+          told.push(step);
+
+          return Promise.resolve();
+        },
+        onStepDone: (detail: unknown) => {
+          told.push(detail);
+
+          return Promise.resolve();
+        },
+      };
+    }
+
+    it("reports a name match: what the shop offered, the rule that linked, the link written", async () => {
+      useShop({
+        candidates: [candidate("Oude kaas")],
+        product: { name: "Oude kaas", price: 7.99, currency: "EUR" },
+      });
+      const { told, ...listeners } = listening();
+
+      await matchGroceryName({
+        storeId: STORE,
+        name: "oude kaas",
+        householdKey: HOUSEHOLD,
+        ...listeners,
+      });
+
+      expect(told).toEqual([
+        "searching",
+        {
+          answered: true,
+          candidates: 1,
+          linked: "name",
+          product: "Oude kaas",
+          decision: "not asked: the name rule linked first",
+        },
+        "reading-product",
+        "saving-link",
+        { written: true },
+      ]);
+    });
+
+    it("reports the Decision's verdict beside the route it linked by", async () => {
+      useShop({
+        candidates: offered,
+        product: { name: "1 de Beste Oude kaas 48+", price: 8.49, currency: "EUR" },
+      });
+      mocks.decideProduct.mockResolvedValue({
+        asked: true,
+        linked: offered[0],
+        suggestion: null,
+        verdict: SURE,
+      });
+      const { told, ...listeners } = listening();
+
+      await matchGroceryName({
+        storeId: STORE,
+        name: "oude kaas",
+        householdKey: HOUSEHOLD,
+        ...listeners,
+      });
+
+      expect(told).toEqual([
+        "searching",
+        {
+          answered: true,
+          candidates: 2,
+          linked: "decision",
+          product: "Oude kaas 500 g",
+          decision: SURE,
+        },
+        "reading-product",
+        "saving-link",
+        { written: true },
+      ]);
+    });
+
+    it("reports a Miss with the verdict that declined, and the Miss it saved", async () => {
+      useShop({ candidates: offered });
+      mocks.decideProduct.mockResolvedValue({
+        asked: true,
+        linked: null,
+        suggestion: { ranked: [] },
+        verdict: NOT_SURE,
+      });
+      const { told, ...listeners } = listening();
+
+      await matchGroceryName({
+        storeId: STORE,
+        name: "oude kaas",
+        householdKey: HOUSEHOLD,
+        ...listeners,
+      });
+
+      expect(told).toEqual([
+        "searching",
+        { answered: true, candidates: 2, linked: null, decision: NOT_SURE },
+        "saving-link",
+        { written: true },
+      ]);
+    });
+
+    it("reports a Miss no Decision was asked about with the reason it was not", async () => {
+      useShop({ candidates: offered });
+      const { told, ...listeners } = listening();
+
+      await matchGroceryName({
+        storeId: STORE,
+        name: "oude kaas",
+        householdKey: HOUSEHOLD,
+        ...listeners,
+      });
+
+      expect(told).toEqual([
+        "searching",
+        { answered: true, candidates: 2, linked: null, decision: OFF.reason },
+        "saving-link",
+        { written: true },
+      ]);
+    });
+
+    it("reports a shop that did not answer, and nothing after it", async () => {
+      registerQueueApiHandlers({
+        fetchStorePage: (url: string) => Promise.resolve({ html: "", url, rendered: false }),
+        readSearchResults: () => [],
+        readProduct: () => null,
+      });
+      const { told, ...listeners } = listening();
+
+      await matchGroceryName({
+        storeId: STORE,
+        name: "oude kaas",
+        householdKey: HOUSEHOLD,
+        ...listeners,
+      });
+
+      expect(told).toEqual(["searching", { answered: false }]);
     });
   });
 

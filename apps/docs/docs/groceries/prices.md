@@ -34,7 +34,7 @@ Norish links a grocery to one of the shop's products by itself only when the pro
 
 Everything else is yours to decide. Open the grocery and use the **Product** field: typing shows what the Store already knows and what the shop answers, with the price beside each. Typing a product's own name fills it in.
 
-When your administrator has configured a [Decision Model](../configuration/ai-provider.md#decision-model) with _Grocery linking_ selected, it is asked which of the shop's products is the grocery once the name rule has declined. A product it is sure of is linked and priced as a name match would be; otherwise nothing is linked, the shop's answers are offered most likely first, and its best guess carries a **Suggested** mark. Unlinking works as before, and a product you unlink is not linked again on its say-so.
+When your administrator has configured a [Decision Model](../configuration/ai-provider.md#decision-model) with _Grocery linking_ selected, it is asked which of the shop's products is the grocery once the name rule has declined. Its pick is linked and priced as a name match would be when it rates that product likelier than every alternative together; otherwise nothing is linked and the shop's answers are offered most likely first. A wrong pick is one tap to undo: unlinking works as before, and a product you unlink is not linked again on its say-so.
 
 ```mermaid
 flowchart TD
@@ -42,9 +42,9 @@ flowchart TD
   N -- yes --> L[Linked and priced]
   N -- no --> D{Decision Model with<br/>Grocery linking on?}
   D -- no --> M[Miss: offered in the shop's order]
-  D -- yes --> P{Sure enough to link?}
+  D -- yes --> P{"Its pick likelier than<br/>every alternative together?"}
   P -- yes --> L
-  P -- no --> O[Miss: offered most likely first,<br/>best guess marked]
+  P -- no --> O[Miss: offered most likely first]
 ```
 
 To undo a link, open the grocery and press **Unlink product**. The row loses its price, and the Store treats the name as one it has no product for until you pick or type one.

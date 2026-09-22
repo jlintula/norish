@@ -93,7 +93,9 @@ function StepList({ steps, t }: { steps: AdminJobStepDTO[]; t: Translate }) {
               </div>
               {meta ? <span className="text-muted text-xs">{meta}</span> : null}
               {step.detailJson ? (
-                <span className="text-muted font-mono text-xs break-all">{step.detailJson}</span>
+                <pre className="text-muted font-mono text-xs break-all whitespace-pre-wrap">
+                  {step.detailJson}
+                </pre>
               ) : null}
               {step.error ? (
                 <span className="text-danger text-xs break-all">{step.error}</span>

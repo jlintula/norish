@@ -845,7 +845,10 @@
         "ai-request": "AI request",
         "syncing-event": "Sync calendar event",
         "deleting-event": "Delete calendar event",
-        "running": "Run task"
+        "running": "Run task",
+        "searching": "Search the shop",
+        "reading-product": "Read the product page",
+        "saving-link": "Save the link"
       },
       "queues": {
         "recipe-import": "Recipe import",
@@ -859,7 +862,8 @@
         "ingredient-linking": "Связывание ингредиентов",
         "caldav-sync": "CalDAV sync",
         "scheduled-tasks": "Scheduled tasks",
-        "image-generation": "Генерация изображений"
+        "image-generation": "Генерация изображений",
+        "store-lookup": "Поиск в магазине"
       },
       "summary": {
         "failed": "{count} failed"

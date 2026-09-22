@@ -21,8 +21,6 @@ import { stores } from "./stores";
 export interface ProductSuggestion {
   /** The offered products' page URLs, most likely first, with the probability of each. */
   ranked: { url: string; probability: number }[];
-  /** The page URL of the best guess, where its probability cleared the suggestion bar. */
-  best: string | null;
 }
 
 /**

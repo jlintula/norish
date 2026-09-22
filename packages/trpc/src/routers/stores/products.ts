@@ -119,9 +119,10 @@ const searchShop = authedProcedure
     const { candidates, answered } = await searchStore(store.searchAddress, input.term);
     // What the lookup's Decision said about these products, kept with the
     // Miss for this name (ADR-0035): the offered list is ordered by it, most
-    // likely first, with the best guess marked. One indexed row, no request.
+    // likely first. One indexed row, no request.
     const link = await resolveProductLink(input.storeId, input.term);
-    const offered = orderBySuggestion(candidates, link?.product ? null : link?.suggestion);
+    const ranking = link?.product ? null : (link?.suggestion ?? null);
+    const offered = orderBySuggestion(candidates, ranking);
 
     log.info(
       {
@@ -129,7 +130,7 @@ const searchShop = authedProcedure
         storeId: input.storeId,
         count: candidates.length,
         answered,
-        suggested: offered.some((candidate) => candidate.suggested),
+        ranked: ranking !== null,
       },
       "Searched a shop for the picker"
     );

@@ -32,10 +32,13 @@ const SaleFields = {
   dealWords: z.string().max(120).nullish(),
 };
 
-/** A Decision's ranking of the products a lookup offered for a name (ADR-0035). */
+/**
+ * A Decision's ranking of the products a lookup offered for a name (ADR-0035).
+ * A row written while the ranking also named a best guess parses all the
+ * same: the key it no longer has is dropped on the way in.
+ */
 export const ProductSuggestionSchema = z.object({
   ranked: z.array(z.object({ url: z.string(), probability: z.number().min(0).max(1) })),
-  best: z.string().nullable(),
 });
 
 export const StoreProductLinkSelectSchema = createSelectSchema(storeProductLinks)

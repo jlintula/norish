@@ -406,7 +406,6 @@ describe("store products, product links and misses", () => {
           { url: PAGE, probability: 0.6 },
           { url: OTHER_PAGE, probability: 0.3 },
         ],
-        best: PAGE,
       };
 
       await expect(linkIfUnanswered(storeId, "kaas", null, suggestion)).resolves.toBe(true);

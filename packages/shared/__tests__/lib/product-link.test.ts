@@ -32,16 +32,14 @@ describe("orderBySuggestion", () => {
   it("leaves the shop's order untouched without a suggestion", () => {
     expect(orderBySuggestion(OFFERED, null)).toEqual(OFFERED);
     expect(orderBySuggestion(OFFERED, undefined)).toEqual(OFFERED);
-    expect(orderBySuggestion(OFFERED, null).some((c) => c.suggested)).toBe(false);
   });
 
-  it("puts the ranked products first, most likely first, and marks the best guess", () => {
+  it("puts the ranked products first, most likely first, the rest in the shop's order", () => {
     const ordered = orderBySuggestion(OFFERED, {
       ranked: [
-        { url: "https://shop/b", probability: 0.6 },
+        { url: "https://shop/b", probability: 0.4 },
         { url: "https://shop/a", probability: 0.3 },
       ],
-      best: "https://shop/b",
     });
 
     expect(ordered.map((c) => c.url)).toEqual([
@@ -49,28 +47,13 @@ describe("orderBySuggestion", () => {
       "https://shop/a",
       "https://shop/c",
     ]);
-    expect(ordered[0]).toMatchObject({ suggested: true });
-    expect(ordered[1]?.suggested).toBeUndefined();
-  });
-
-  it("marks nothing when the Decision was not sure enough of a best guess", () => {
-    const ordered = orderBySuggestion(OFFERED, {
-      ranked: [{ url: "https://shop/c", probability: 0.4 }],
-      best: null,
-    });
-
-    expect(ordered.map((c) => c.url)).toEqual([
-      "https://shop/c",
-      "https://shop/a",
-      "https://shop/b",
-    ]);
-    expect(ordered.some((c) => c.suggested)).toBe(false);
+    // Nothing is marked: the order is the whole suggestion.
+    expect(ordered).toEqual([OFFERED[1], OFFERED[0], OFFERED[2]]);
   });
 
   it("ignores a ranking of products the shop no longer offers", () => {
     const ordered = orderBySuggestion(OFFERED, {
       ranked: [{ url: "https://shop/gone", probability: 0.9 }],
-      best: "https://shop/gone",
     });
 
     expect(ordered).toEqual(OFFERED);

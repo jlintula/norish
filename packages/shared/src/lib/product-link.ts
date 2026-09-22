@@ -30,9 +30,10 @@ export function pendingLink(storeId: string, name: string): ResolvedProductLink 
 /**
  * The shop's offered products in the order a Decision put them (ADR-0035):
  * the ones it ranked most likely first, the rest in the shop's own order
- * after them, and the best guess marked where the Decision cleared the bar
- * for one. Without a suggestion the list is the shop's, untouched. Pure, so
- * the panel's query path spends nothing beyond reading what the lookup kept.
+ * after them. Without a suggestion the list is the shop's, untouched. Pure,
+ * so the panel's query path spends nothing beyond reading what the lookup
+ * kept. Nothing is marked: a guess worth marking is linked instead, and the
+ * order already puts the likeliest first.
  */
 export function orderBySuggestion<T extends StoreCandidate>(
   candidates: readonly T[],
@@ -46,9 +47,5 @@ export function orderBySuggestion<T extends StoreCandidate>(
     .sort((a, b) => rank.get(a.url)! - rank.get(b.url)!);
   const unranked = candidates.filter((candidate) => !rank.has(candidate.url));
 
-  return [...ranked, ...unranked].map((candidate) =>
-    suggestion.best !== null && candidate.url === suggestion.best
-      ? { ...candidate, suggested: true }
-      : candidate
-  );
+  return [...ranked, ...unranked];
 }
